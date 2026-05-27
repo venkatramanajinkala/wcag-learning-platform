@@ -1,5 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
-import { LogIn, LogOut, UserPlus } from "lucide-react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { ChevronDown, LogIn, LogOut, Settings, User, UserPlus } from "lucide-react";
 import {
   clearAuth,
   getStoredUser,
@@ -20,12 +20,36 @@ export default function AuthPanel() {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateUser = () => setUser(getStoredUser());
     window.addEventListener("a11y-auth-update", updateUser);
     return () => window.removeEventListener("a11y-auth-update", updateUser);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    const handleEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
 
   if (!isBackendConfigured()) {
     return (
@@ -34,6 +58,20 @@ export default function AuthPanel() {
       </span>
     );
   }
+
+  const handleMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+
+    event.preventDefault();
+    const itemNodes = menuRef.current?.querySelectorAll<HTMLButtonElement>("[role='menuitem']");
+    const items: HTMLButtonElement[] = itemNodes ? Array.from<HTMLButtonElement>(itemNodes) : [];
+    const activeIndex = items.findIndex((item) => item === document.activeElement);
+    const nextIndex =
+      event.key === "ArrowDown"
+        ? (activeIndex + 1) % items.length
+        : (activeIndex - 1 + items.length) % items.length;
+    items[nextIndex]?.focus();
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,32 +97,92 @@ export default function AuthPanel() {
   };
 
   if (user) {
+    const initials = user.full_name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
     return (
-      <div className="flex items-center gap-2">
-        <span className="hidden md:inline text-[11px] font-bold text-slate-600">
-          {user.full_name}
-        </span>
+      <div className="relative" ref={menuRef} onKeyDown={handleMenuKeyDown}>
         <button
           type="button"
-          onClick={() => {
-            clearAuth();
-            setUser(null);
-          }}
-          className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          onClick={() => setOpen((value) => !value)}
+          className={`inline-flex h-8 items-center gap-1 rounded-lg border py-1 pl-1 pr-1.5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+            open
+              ? "border-slate-300 bg-slate-50 text-slate-900"
+              : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+          }`}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={`${user.full_name} profile menu`}
         >
-          <LogOut className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Logout</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-[10px] font-black text-white">
+            {initials || "A"}
+          </span>
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
+
+        {open && (
+          <div
+            role="menu"
+            aria-label="Profile actions"
+            className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+          >
+            <div className="border-b border-slate-100 px-3 py-2.5">
+              <p className="truncate text-xs font-extrabold text-slate-900">{user.full_name}</p>
+              <p className="truncate text-[11px] font-medium text-slate-500">{user.email}</p>
+            </div>
+            <button
+              type="button"
+              role="menuitem"
+              className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 focus:bg-indigo-50 focus:text-indigo-700 focus:outline-none"
+              onClick={() => setOpen(false)}
+            >
+              <User className="h-3.5 w-3.5" />
+              Profile
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 focus:bg-indigo-50 focus:text-indigo-700 focus:outline-none"
+              onClick={() => setOpen(false)}
+            >
+              <Settings className="h-3.5 w-3.5" />
+              Settings
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                clearAuth();
+                setUser(null);
+                setOpen(false);
+              }}
+              className="flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-left text-xs font-bold text-red-700 hover:bg-red-50 focus:bg-red-50 focus:outline-none"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border bg-indigo-50 border-indigo-100 text-indigo-700 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+          open
+            ? "border-slate-900 bg-slate-900 text-white"
+            : "border-indigo-100 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+        }`}
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <LogIn className="w-3.5 h-3.5" />
         Sync

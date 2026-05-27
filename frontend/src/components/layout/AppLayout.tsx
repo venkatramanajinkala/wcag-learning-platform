@@ -194,9 +194,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </a>
 
       {/* Top Banner Landmarks */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 shadow-xxs backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-3 px-4 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -210,70 +210,76 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {/* Core branding */}
             <Link 
               to="/" 
-              className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 rounded-lg"
+              className="flex min-w-0 items-center gap-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
               aria-label="A11yPlay Home Screen"
             >
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs transition-transform hover:scale-105">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white shadow-xs transition-transform hover:scale-105">
                 A
               </div>
-              <div>
-                <span className="font-extrabold text-slate-900 tracking-tight block text-sm sm:text-base">
+              <div className="min-w-0">
+                <span className="block truncate text-sm font-extrabold tracking-tight text-slate-900 sm:text-base">
                   A11yPlay
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono font-bold block leading-none mt-0.5">
+                <span className="mt-0.5 hidden truncate text-[10px] font-bold leading-none text-slate-500 sm:block">
                   WCAG Learning Platform
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Quick top bar elements */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Focus highlight trigger */}
-            <button
-              onClick={() => setFocusHighlightEnabled(!focusHighlightEnabled)}
-              className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
-                focusHighlightEnabled
-                  ? "bg-amber-100 border-amber-300 text-amber-900 font-black"
-                  : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-105"
-              }`}
-              aria-pressed={focusHighlightEnabled}
-              title="Toggle High Contrast Keyboard Focus Outlines (WCAG 2.4.7)"
-              aria-label="Toggle High Outline Visible Focus Mode"
-            >
-              <Eye className="w-3.5 h-3.5 text-amber-650" />
-              <span className="hidden sm:inline">Focus Guide</span>
-            </button>
+          <div className="flex flex-1 items-center justify-end gap-3">
+            <nav aria-label="Accessibility tools" className="hidden shrink-0 items-center gap-1 md:flex">
+              {/* Focus highlight trigger */}
+              <button
+                onClick={() => setFocusHighlightEnabled(!focusHighlightEnabled)}
+                className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+                  focusHighlightEnabled
+                    ? "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+                aria-pressed={focusHighlightEnabled}
+                title="Toggle High Contrast Keyboard Focus Outlines (WCAG 2.4.7)"
+                aria-label="Toggle High Outline Visible Focus Mode"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>Focus Guide</span>
+              </button>
 
-            {/* Space trigger */}
-            <button
-              onClick={() => setTextSpacingEnabled(!textSpacingEnabled)}
-              className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
-                textSpacingEnabled
-                  ? "bg-indigo-100 border-indigo-300 text-indigo-900 font-black"
-                  : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-105"
-              }`}
-              aria-pressed={textSpacingEnabled}
-              title="Toggle WCAG 1.4.12 Text Spacing Override (verify responsive flows without text truncation)"
-              aria-label="Toggle Text Spacing Adaptability"
-            >
-              <Type className="w-3.5 h-3.5 text-indigo-600" />
-              <span className="hidden sm:inline">Spacing Check</span>
-            </button>
+              {/* Space trigger */}
+              <button
+                onClick={() => setTextSpacingEnabled(!textSpacingEnabled)}
+                className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+                  textSpacingEnabled
+                    ? "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+                aria-pressed={textSpacingEnabled}
+                title="Toggle WCAG 1.4.12 Text Spacing Override (verify responsive flows without text truncation)"
+                aria-label="Toggle Text Spacing Adaptability"
+              >
+                <Type className="w-3.5 h-3.5" />
+                <span>Spacing Check</span>
+              </button>
 
-            <span className="hidden lg:inline-flex items-center gap-1.5 text-[11px] font-mono text-indigo-700 bg-indigo-50/50 px-2.5 py-1 rounded-md border border-indigo-100 font-bold">
-              <Keyboard className="w-3.5 h-3.5" />
-              Keyboard Testable
-            </span>
-            <AuthPanel />
-            <Link
-              to="/"
-              className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
-                location.pathname === "/" ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Dashboard
-            </Link>
+              <span className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold text-slate-500">
+                <Keyboard className="w-3.5 h-3.5" />
+                Keyboard Testable
+              </span>
+            </nav>
+
+            {/* Primary navigation */}
+            <nav aria-label="Primary navigation" className="flex items-center justify-end gap-1.5">
+              <Link
+                to="/"
+                className={`inline-flex h-8 items-center rounded-lg px-2.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+                  location.pathname === "/" ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+                aria-current={location.pathname === "/" ? "page" : undefined}
+              >
+                Dashboard
+              </Link>
+              <AuthPanel />
+            </nav>
           </div>
         </div>
       </header>
