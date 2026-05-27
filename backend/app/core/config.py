@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24 * 7
     database_url: str = "sqlite:///./a11yplay.db"
     backend_cors_origins: str = "http://localhost:3000"
+    backend_cors_origin_regex: str = ""
     frontend_url: str = "http://localhost:3000"
     reset_token_expire_minutes: int = 30
     smtp_host: str = ""
