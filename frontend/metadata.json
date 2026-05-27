@@ -1,0 +1,6 @@
+{
+  "name": "WCAG Learning Platform",
+  "description": "An interactive educational platform where users learn WCAG level A/AA criteria through side-by-side bad vs. good live-editable playground sandboxes and proactive real-time accessibility audits.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
