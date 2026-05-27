@@ -9,8 +9,12 @@ class Settings(BaseSettings):
     secret_key: str = "change-this-before-production"
     access_token_expire_minutes: int = 60 * 24 * 7
     database_url: str = "sqlite:///./a11yplay.db"
-    backend_cors_origins: str = "http://localhost:3000"
-    backend_cors_origin_regex: str = ""
+    backend_cors_origins: str = (
+        "http://localhost:3000,"
+        "http://127.0.0.1:3000,"
+        "https://a11y-learning.netlify.app"
+    )
+    backend_cors_origin_regex: str = r"https://.*\.netlify\.app"
     frontend_url: str = "http://localhost:3000"
     reset_token_expire_minutes: int = 30
     smtp_host: str = ""
