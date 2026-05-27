@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     backend_cors_origin_regex: str = r"https://.*\.netlify\.app"
     frontend_url: str = "http://localhost:3000"
     reset_token_expire_minutes: int = 30
+    email_provider: str = "smtp"
+    email_from: str = ""
+    resend_api_key: str = ""
     smtp_host: str = ""
     smtp_port: int = 587
     smtp_user: str = ""
@@ -31,6 +34,10 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.backend_cors_origins.split(",") if origin.strip()]
+
+    @property
+    def sender_email(self) -> str:
+        return self.email_from or self.smtp_from
 
 
 @lru_cache
