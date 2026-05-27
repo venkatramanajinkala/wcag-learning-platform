@@ -99,6 +99,31 @@ export function login(email: string, password: string) {
   });
 }
 
+export function googleLogin(credential: string) {
+  return apiFetch<AuthResponse>("/api/oauth/google", {
+    method: "POST",
+    body: JSON.stringify({ credential }),
+  });
+}
+
+export function fetchMe() {
+  return apiFetch<ApiUser>("/api/auth/me");
+}
+
+export function forgotPassword(email: string) {
+  return apiFetch<{ status: string }>("/api/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(token: string, newPassword: string) {
+  return apiFetch<{ status: string }>("/api/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, new_password: newPassword }),
+  });
+}
+
 export function fetchProgress() {
   return apiFetch<ProgressItem[]>("/api/progress");
 }

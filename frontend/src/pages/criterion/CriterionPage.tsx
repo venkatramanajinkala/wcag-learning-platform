@@ -71,7 +71,7 @@ export default function CriterionPage() {
           The requested accessibility standard ID (<span className="font-mono font-bold text-slate-800">{id}</span>) does not exist in the initial MVP list.
         </p>
         <Link 
-          to="/" 
+          to="/app" 
           className="inline-flex items-center gap-2 text-xs font-bold text-white bg-slate-900 px-4 py-2.5 rounded-lg shadow hover:bg-slate-850 focus:outline-2 focus:outline-slate-900 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function CriterionPage() {
       
       {/* Visual Navigation Breadcrumbs */}
       <nav aria-label="Breadcrumb Navigation" className="flex items-center gap-2 text-xs text-slate-450 font-bold">
-        <Link to="/" className="hover:text-indigo-600 transition-colors focus:outline-none focus:ring-1 focus:ring-indigo-600 rounded">
+        <Link to="/app" className="hover:text-indigo-600 transition-colors focus:outline-none focus:ring-1 focus:ring-indigo-600 rounded">
           A11yPlay Home
         </Link>
         <span className="text-slate-300">/</span>

@@ -290,7 +290,7 @@ export default function Home() {
 
                 {/* Action route button links */}
                 <Link
-                  to={`/criterion/${criterion.id}`}
+                  to={`/app/criterion/${criterion.id}`}
                   className={`w-full text-center inline-flex items-center justify-center gap-1.5 text-xs font-bold py-2.5 rounded-lg transition-all focus:outline-none focus:ring-2 cursor-pointer ${
                     criterion.examples && criterion.examples.length > 0
                       ? isCompleted

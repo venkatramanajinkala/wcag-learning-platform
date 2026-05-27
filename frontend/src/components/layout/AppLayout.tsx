@@ -209,7 +209,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Core branding */}
             <Link 
-              to="/" 
+              to="/app" 
               className="flex min-w-0 items-center gap-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
               aria-label="A11yPlay Home Screen"
             >
@@ -269,15 +269,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Primary navigation */}
             <nav aria-label="Primary navigation" className="flex items-center justify-end gap-1.5">
-              <Link
-                to="/"
-                className={`inline-flex h-8 items-center rounded-lg px-2.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-                  location.pathname === "/" ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-                aria-current={location.pathname === "/" ? "page" : undefined}
-              >
+              {(() => {
+                const isActive = location.pathname === "/app" || location.pathname.startsWith("/app/");
+                return (
+                  <Link
+                    to="/app"
+                    className={`inline-flex h-8 items-center rounded-lg px-2.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+                      isActive ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
                 Dashboard
-              </Link>
+                  </Link>
+                );
+              })()}
               <AuthPanel />
             </nav>
           </div>
@@ -437,7 +442,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   </h3>
                   <ul className="space-y-1">
                     {items.map((criterion) => {
-                      const isActive = location.pathname === `/criterion/${criterion.id}`;
+                      const isActive = location.pathname === `/app/criterion/${criterion.id}`;
 
                       // Calculate checked count for this specific criterion dynamically
                       const parsed = readLocalProgress(criterion.id);
@@ -453,7 +458,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       return (
                         <li key={criterion.id}>
                           <Link
-                            to={`/criterion/${criterion.id}`}
+                            to={`/app/criterion/${criterion.id}`}
                             className={`group flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-xs leading-5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
                               isActive
                                 ? "bg-indigo-50 text-indigo-900 font-bold"

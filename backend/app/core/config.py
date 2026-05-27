@@ -10,6 +10,16 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24 * 7
     database_url: str = "sqlite:///./a11yplay.db"
     backend_cors_origins: str = "http://localhost:3000"
+    frontend_url: str = "http://localhost:3000"
+    reset_token_expire_minutes: int = 30
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from: str = "no-reply@example.com"
+    smtp_use_tls: bool = True
+    smtp_use_ssl: bool = False
+    google_client_id: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
