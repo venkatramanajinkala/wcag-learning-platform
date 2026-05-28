@@ -33,6 +33,17 @@ class GoogleTokenLogin(BaseModel):
     credential: str = Field(min_length=10)
 
 
+class GoogleUserRead(BaseModel):
+    email: EmailStr
+    name: str
+    picture: str | None = None
+    google_id: str
+
+
+class GoogleAuthResponse(Token):
+    google_user: GoogleUserRead
+
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
