@@ -543,14 +543,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </main>
       </div>
 
-      {/* Accessible Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 z-20">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 A11yPlay Platform. Built for certified accessibility engineering training.</p>
-          <div className="flex gap-4">
-            <span className="text-emerald-600 font-medium flex items-center gap-1 text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-6 text-xs text-slate-500 sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+          <div className="space-y-1">
+            <p className="font-semibold text-slate-700">A11yPlay Platform</p>
+            <p>Accessibility-first learning, progress tracking, and audit practice in one place.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 md:justify-end">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
               WCAG 2.2 Compliant
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 font-semibold text-slate-600">
+              Learning workspace
             </span>
           </div>
         </div>
@@ -559,3 +564,5 @@ export default function AppLayout({ children }: AppLayoutProps) {
     </div>
   );
 }
+
+

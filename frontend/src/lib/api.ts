@@ -29,8 +29,11 @@ export interface AuditResponse {
 }
 
 export interface ChatResponse {
-  answer: string;
-  wcag_context: string[];
+  response: string;
+  rules_used: Array<{
+    id: string;
+    title: string;
+  }>;
 }
 
 export function isBackendConfigured() {
@@ -162,10 +165,10 @@ export function scanHtml(html: string, criterionId?: string, saveSubmission = fa
   });
 }
 
-export function sendChatMessage(message: string) {
+export function sendChatMessage(sessionId: string, message: string) {
   return apiFetch<ChatResponse>("/chat", {
     method: "POST",
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ session_id: sessionId, message }),
   }).catch(async (error) => {
     if (!(error instanceof Error) || !/404|Not Found/i.test(error.message)) {
       throw error;
@@ -173,7 +176,7 @@ export function sendChatMessage(message: string) {
 
     return apiFetch<ChatResponse>("/api/chat", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ session_id: sessionId, message }),
     });
   });
 }

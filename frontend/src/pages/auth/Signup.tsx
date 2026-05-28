@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, UserPlus } from "lucide-react";
 import AuthLayout from "./AuthLayout";
 import GoogleSignInButton from "../../components/auth/GoogleSignInButton";
 import { register } from "../../lib/api";
@@ -45,75 +46,90 @@ export default function Signup() {
 
   return (
     <AuthLayout>
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-        <div className="space-y-1">
-          <h1 className="text-lg font-extrabold tracking-tight">Create account</h1>
-          <p className="text-xs font-medium text-slate-600">Save your progress and unlock the learning workspace.</p>
+      <div className="overflow-hidden rounded-[28px] border border-emerald-100 bg-[linear-gradient(180deg,#ffffff_0%,#f8fff9_100%)] shadow-lg shadow-emerald-100/40">
+        <div className="h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-indigo-600" aria-hidden="true" />
+        <div className="p-6 sm:p-8">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-600">
+              <UserPlus className="h-3.5 w-3.5" />
+              Create account
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-slate-900">Start your WCAG practice</h1>
+            <p className="text-sm leading-relaxed text-slate-600">
+              Create an account to save progress, keep audits tied to your profile, and use the assistant across sessions.
+            </p>
+          </div>
+
+          <div className="mt-5">
+            <GoogleSignInButton />
+          </div>
+
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-3 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">or use email</span>
+            </div>
+          </div>
+
+          <form onSubmit={onSubmit} className="space-y-4" aria-label="Sign up form">
+            <label className="block text-xs font-bold text-slate-700">
+              Full name
+              <input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                required
+                minLength={2}
+                autoComplete="name"
+                placeholder="Your name"
+              />
+            </label>
+
+            <label className="block text-xs font-bold text-slate-700">
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                required
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+            </label>
+
+            <label className="block text-xs font-bold text-slate-700">
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder="Create a password"
+              />
+            </label>
+
+            <div className="flex items-center justify-between gap-3">
+              <Link to="/login" className="text-xs font-bold text-slate-700 hover:text-slate-900">
+                Already have an account?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-cyan-600 to-indigo-600 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition hover:from-emerald-700 hover:via-cyan-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? "Creating..." : "Create account"}
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </form>
         </div>
-
-        <GoogleSignInButton />
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-slate-200" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-2 text-[11px] font-bold text-slate-500">or</span>
-          </div>
-        </div>
-
-        <form onSubmit={onSubmit} className="space-y-3" aria-label="Sign up form">
-          <label className="block text-xs font-bold text-slate-700">
-            Full name
-            <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              required
-              minLength={2}
-              autoComplete="name"
-            />
-          </label>
-
-          <label className="block text-xs font-bold text-slate-700">
-            Email
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              required
-              autoComplete="email"
-            />
-          </label>
-
-          <label className="block text-xs font-bold text-slate-700">
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-          </label>
-
-          <div className="flex items-center justify-between">
-            <Link to="/login" className="text-xs font-bold text-slate-700 hover:text-slate-900">
-              Already have an account?
-            </Link>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-slate-900 px-3 py-2.5 text-xs font-extrabold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-60"
-          >
-            {loading ? "Creating..." : "Create account"}
-          </button>
-        </form>
       </div>
     </AuthLayout>
   );

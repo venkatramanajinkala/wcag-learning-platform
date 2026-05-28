@@ -6,11 +6,25 @@ interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
-  context?: string[];
+  rulesUsed?: Array<{
+    id: string;
+    title: string;
+  }>;
 }
 
 function newId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function getOrCreateSessionId() {
+  const key = "a11yplay-chat-session";
+  const existing = window.localStorage.getItem(key);
+  if (existing) return existing;
+
+  const created =
+    window.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  window.localStorage.setItem(key, created);
+  return created;
 }
 
 export default function ChatWidget() {
@@ -18,6 +32,7 @@ export default function ChatWidget() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId] = useState(() => getOrCreateSessionId());
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -50,14 +65,14 @@ export default function ChatWidget() {
     setMessages((current) => [...current, { id: newId(), role: "user", content: trimmed }]);
 
     try {
-      const response = await sendChatMessage(trimmed);
+      const response = await sendChatMessage(sessionId, trimmed);
       setMessages((current) => [
         ...current,
         {
           id: newId(),
           role: "assistant",
-          content: response.answer,
-          context: response.wcag_context,
+          content: response.response,
+          rulesUsed: response.rules_used,
         },
       ]);
     } catch (error) {
@@ -139,16 +154,22 @@ export default function ChatWidget() {
               }`}
             >
               <p className="whitespace-pre-wrap">{message.content}</p>
-              {message.context && message.context.length > 0 && (
+              {message.rulesUsed && message.rulesUsed.length > 0 && (
                 <div className="mt-3 border-t border-slate-200 pt-2">
-                  <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-slate-500">Rules used</p>
-                  <ul className="space-y-1">
-                    {message.context.map((rule) => (
-                      <li key={rule} className="rounded-md bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-950">
-                        {rule}
-                      </li>
+                  <p className="mb-2 text-[10px] font-black uppercase tracking-wide text-slate-500">
+                    Referenced WCAG Rules
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {message.rulesUsed.map((rule) => (
+                      <span
+                        key={rule.id}
+                        className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-950"
+                      >
+                        <span className="font-mono">{rule.id}</span>
+                        <span className="max-w-[10rem] truncate">{rule.title}</span>
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
             </div>
