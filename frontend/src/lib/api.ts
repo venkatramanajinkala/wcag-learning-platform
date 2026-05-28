@@ -166,5 +166,14 @@ export function sendChatMessage(message: string) {
   return apiFetch<ChatResponse>("/chat", {
     method: "POST",
     body: JSON.stringify({ message }),
+  }).catch(async (error) => {
+    if (!(error instanceof Error) || !/404|Not Found/i.test(error.message)) {
+      throw error;
+    }
+
+    return apiFetch<ChatResponse>("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message }),
+    });
   });
 }

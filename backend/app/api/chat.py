@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from app.services.groq_client import ask_groq
-from app.services.wcag_kb import search_wcag_rules
+from app.services.wcag_kb import get_wcag_rules
 
 
 router = APIRouter(tags=["chat"])
@@ -19,6 +19,6 @@ class ChatResponse(BaseModel):
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest) -> ChatResponse:
-    matched_rules = search_wcag_rules(request.message)
+    matched_rules = get_wcag_rules(request.message)
     answer = ask_groq(request.message, matched_rules)
     return ChatResponse(answer=answer, wcag_context=matched_rules)

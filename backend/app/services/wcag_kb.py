@@ -6,12 +6,20 @@ from typing import Any
 
 WCAG_PATH = Path(__file__).resolve().parents[2] / "wcag.json"
 
+KEYWORD_RULE_MAP: list[tuple[tuple[str, ...], str]] = [
+    (("image", "alt", "photo"), "1.1.1"),
+    (("contrast", "color", "brightness"), "1.4.3"),
+    (("keyboard", "tab", "focus"), "2.1.1"),
+    (("form", "input", "label"), "1.3.1"),
+]
+
 
 def load_wcag_rules(path: Path = WCAG_PATH) -> dict[str, dict[str, Any]]:
     with path.open("r", encoding="utf-8") as file:
         data = json.load(file)
+
     if not isinstance(data, dict):
-        raise ValueError("wcag.json must contain an object of WCAG rule ids to rule text.")
+        raise ValueError("wcag.json must contain an object of WCAG rule ids to rule data.")
 
     normalized: dict[str, dict[str, Any]] = {}
     for rule_id, rule_data in data.items():
@@ -23,85 +31,65 @@ def load_wcag_rules(path: Path = WCAG_PATH) -> dict[str, dict[str, Any]]:
                 "title": "",
                 "summary": str(rule_data),
             }
+
     return normalized
 
 
 WCAG_RULES = load_wcag_rules()
 
 
-def _keywords(text: str) -> set[str]:
-    words = re.findall(r"[a-z0-9.]+", text.lower())
-    return {word for word in words if len(word) > 2}
-
-
-def _flatten_text(value: Any) -> str:
-    if isinstance(value, dict):
-        return " ".join(_flatten_text(item) for item in value.values())
-    if isinstance(value, list):
-        return " ".join(_flatten_text(item) for item in value)
-    return str(value)
-
-
-def _list_text(value: Any, limit: int = 3) -> str:
-    if not isinstance(value, list) or not value:
-        return ""
-    return "; ".join(str(item) for item in value[:limit])
-
-
 def _format_rule(rule: dict[str, Any]) -> str:
-    example_titles = [
-        str(example.get("title"))
-        for example in rule.get("examples", [])
-        if isinstance(example, dict) and example.get("title")
-    ]
     parts = [
         f"{rule.get('id')}: {rule.get('title', '')}".strip(),
-        f"Level: {rule.get('level', 'Unknown')} | Principle: {rule.get('principle', 'Unknown')} | WCAG: {rule.get('version', 'Unknown')}",
         f"Summary: {rule.get('summary', '')}",
         f"Description: {rule.get('description', '')}",
         f"Why it matters: {rule.get('whyItMatters', '')}",
     ]
 
-    best_practices = _list_text(rule.get("bestPractices"))
-    if best_practices:
-        parts.append(f"Best practices: {best_practices}")
+    best_practices = rule.get("bestPractices") or []
+    if isinstance(best_practices, list) and best_practices:
+        parts.append(f"Best practices: {'; '.join(str(item) for item in best_practices[:3])}")
 
-    failure_scenarios = _list_text(rule.get("failureScenarios"))
-    if failure_scenarios:
-        parts.append(f"Failure scenarios: {failure_scenarios}")
+    failure_scenarios = rule.get("failureScenarios") or []
+    if isinstance(failure_scenarios, list) and failure_scenarios:
+        parts.append(f"Failure scenarios: {'; '.join(str(item) for item in failure_scenarios[:3])}")
 
-    test_methodology = _list_text(rule.get("testMethodology"))
-    if test_methodology:
-        parts.append(f"How to test: {test_methodology}")
+    test_methodology = rule.get("testMethodology") or []
+    if isinstance(test_methodology, list) and test_methodology:
+        parts.append(f"How to test: {'; '.join(str(item) for item in test_methodology[:3])}")
 
-    if example_titles:
-        parts.append(f"Related app examples: {'; '.join(example_titles[:3])}")
+    examples = rule.get("examples") or []
+    if isinstance(examples, list) and examples:
+        example_titles = [
+            str(example.get("title"))
+            for example in examples
+            if isinstance(example, dict) and example.get("title")
+        ]
+        if example_titles:
+            parts.append(f"Related app examples: {'; '.join(example_titles[:3])}")
 
     return "\n".join(part for part in parts if part.strip())
 
 
-def search_wcag_rules(message: str, limit: int = 5) -> list[str]:
-    query_terms = _keywords(message)
-    if not query_terms:
-        return []
+def _has_keyword(message: str, keywords: tuple[str, ...]) -> bool:
+    lowered = message.lower()
+    return any(re.search(rf"\b{re.escape(keyword)}\b", lowered) for keyword in keywords)
 
-    scored_rules: list[tuple[int, str, dict[str, Any]]] = []
-    lowered_message = message.lower()
 
-    for rule_id, rule_data in WCAG_RULES.items():
-        searchable = f"{rule_id} {_flatten_text(rule_data)}".lower()
-        rule_terms = _keywords(searchable)
-        score = len(query_terms.intersection(rule_terms))
+def get_wcag_rules(message: str) -> list[str]:
+    matched_rule_ids: list[str] = []
 
-        if rule_id in lowered_message:
-            score += 8
-        if str(rule_data.get("title", "")).lower() in lowered_message:
-            score += 5
-        if any(term in searchable for term in query_terms):
-            score += 1
+    for keywords, rule_id in KEYWORD_RULE_MAP:
+        if _has_keyword(message, keywords) and rule_id not in matched_rule_ids:
+            matched_rule_ids.append(rule_id)
 
-        if score > 0:
-            scored_rules.append((score, rule_id, rule_data))
+    matched_rules: list[str] = []
+    for rule_id in matched_rule_ids:
+        rule = WCAG_RULES.get(rule_id)
+        if rule:
+            matched_rules.append(_format_rule(rule))
 
-    scored_rules.sort(key=lambda item: (-item[0], item[1]))
-    return [_format_rule(rule_data) for _, _, rule_data in scored_rules[:limit]]
+    return matched_rules
+
+
+search_wcag_rules = get_wcag_rules
