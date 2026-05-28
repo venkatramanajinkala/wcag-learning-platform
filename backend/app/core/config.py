@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = True
     smtp_use_ssl: bool = False
     google_client_id: str = ""
+    groq_api_key: str = ""
+    groq_model: str = "llama-3.1-8b-instant"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

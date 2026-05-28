@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { wcagCriteria } from "../../data/wcag/criteria";
 import AuthPanel from "../auth/AuthPanel";
+import ChatWidget from "../chat/ChatWidget";
 import { readLocalProgress } from "../../lib/progress";
 import { getStoredToken, isBackendConfigured, resetRemoteProgress } from "../../lib/api";
 
@@ -554,6 +555,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       </footer>
+      <ChatWidget />
     </div>
   );
 }

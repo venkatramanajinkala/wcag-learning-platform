@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from app.api import audit, auth, oauth, progress
+from app.api import audit, auth, chat, oauth, progress
 from app.core.config import get_settings
 from app.db import Base, engine
 
@@ -28,6 +28,7 @@ def create_app() -> FastAPI:
     app.include_router(oauth.router, prefix="/api")
     app.include_router(progress.router, prefix="/api")
     app.include_router(audit.router, prefix="/api")
+    app.include_router(chat.router)
 
     @app.on_event("startup")
     def create_tables() -> None:

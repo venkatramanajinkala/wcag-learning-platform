@@ -28,6 +28,11 @@ export interface AuditResponse {
   submission_id: number | null;
 }
 
+export interface ChatResponse {
+  answer: string;
+  wcag_context: string[];
+}
+
 export function isBackendConfigured() {
   return API_URL.length > 0;
 }
@@ -154,5 +159,12 @@ export function scanHtml(html: string, criterionId?: string, saveSubmission = fa
       criterion_id: criterionId,
       save_submission: saveSubmission,
     }),
+  });
+}
+
+export function sendChatMessage(message: string) {
+  return apiFetch<ChatResponse>("/chat", {
+    method: "POST",
+    body: JSON.stringify({ message }),
   });
 }
