@@ -28,12 +28,27 @@ export interface AuditResponse {
   submission_id: number | null;
 }
 
+// ─── Chat types ──────────────────────────────────────────────────────────────
+
+export interface ChatRuleReference {
+  id: string;
+  title: string;
+}
+
 export interface ChatResponse {
   response: string;
-  rules_used: Array<{
-    id: string;
-    title: string;
-  }>;
+  rules_used: ChatRuleReference[];
+  /**
+   * Intent label detected by the backend router.
+   * Values: greeting | weather | current_leader | news | sports |
+   *         election | wcag | general_chat
+   */
+  intent: string;
+  /**
+   * Only present when the request was sent with debug: true.
+   * Contains internal routing metadata (matched_rules, search query, etc.)
+   */
+  debug?: Record<string, unknown> | null;
 }
 
 export function isBackendConfigured() {
@@ -165,18 +180,60 @@ export function scanHtml(html: string, criterionId?: string, saveSubmission = fa
   });
 }
 
-export function sendChatMessage(sessionId: string, message: string) {
-  return apiFetch<ChatResponse>("/chat", {
-    method: "POST",
-    body: JSON.stringify({ session_id: sessionId, message }),
-  }).catch(async (error) => {
-    if (!(error instanceof Error) || !/404|Not Found/i.test(error.message)) {
-      throw error;
-    }
+// ─── Request helper ───────────────────────────────────────────────────────────
 
-    return apiFetch<ChatResponse>("/api/chat", {
-      method: "POST",
-      body: JSON.stringify({ session_id: sessionId, message }),
-    });
-  });
+/**
+ * Send a chat message to the backend.
+ *
+ * @param sessionId  Persistent session ID (stored in localStorage by ChatWidget).
+ * @param message    User's message text.
+ * @param debug      When true the backend attaches internal routing metadata
+ *                   to the response (useful during development / QA).
+ */
+export async function sendChatMessage(
+  sessionId: string,
+  message: string,
+  debug = false,
+): Promise<ChatResponse> {
+  const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+
+  if (!API_URL) {
+    throw new Error(
+      "Backend API is not configured. Set VITE_API_URL in frontend/.env.",
+    );
+  }
+
+  const body = JSON.stringify({ session_id: sessionId, message, debug });
+  const headers: HeadersInit = { "Content-Type": "application/json" };
+
+  // Try /chat first (no prefix), fall back to /api/chat
+  const endpoints = [`${API_URL}/chat`, `${API_URL}/api/chat`];
+
+  let lastError: Error | null = null;
+  for (const url of endpoints) {
+    try {
+      const resp = await fetch(url, { method: "POST", headers, body });
+      if (resp.ok) {
+        const data = (await resp.json()) as ChatResponse;
+        return data;
+      }
+      if (resp.status !== 404) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(
+          (err as { detail?: string }).detail ??
+            `Chat request failed with status ${resp.status}`,
+        );
+      }
+      // 404 → try next endpoint
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      // Only continue on network / 404 errors
+      if (lastError.message.includes("404") || lastError.message.includes("Not Found")) {
+        continue;
+      }
+      throw lastError;
+    }
+  }
+
+  throw lastError ?? new Error("All chat endpoints returned 404.");
 }

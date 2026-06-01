@@ -25,8 +25,16 @@ def verify_google_id_token(credential: str) -> GoogleUserRead:
         claims = id_token.verify_oauth2_token(
             credential, grequests.Request(), settings.google_client_id
         )
-    except Exception:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Google token")
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Google token",
+        )
+    except Exception as error:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Google token",
+        )
 
     email = (claims.get("email") or "").lower().strip()
     google_id = (claims.get("sub") or "").strip()
