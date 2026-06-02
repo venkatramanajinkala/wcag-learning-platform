@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# A11yPlay Frontend
 
-# Run and deploy your AI Studio app
+React + TypeScript frontend for the A11yPlay WCAG learning platform.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/68ff7151-24ef-4f28-b138-f3b8d7746244
+- Public landing, features, and about pages
+- Authentication screens for login, signup, password reset, and Google sign-in
+- Protected learning routes for WCAG criteria
+- Interactive examples and progress-aware learning UI
+- Chat widget connected to the FastAPI AI assistant
 
-## Run Locally
+## Local setup
 
-**Prerequisites:**  Node.js
+```powershell
+npm.cmd install
+npm.cmd run lint
+npm.cmd run dev
+```
 
+The app runs at:
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```text
+http://localhost:3000
+```
+
+Create `frontend\.env` when connecting to the backend locally:
+
+```text
+VITE_API_URL=http://localhost:8000
+```

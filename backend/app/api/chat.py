@@ -6,15 +6,15 @@ classifies intent, routes to the right handler, and returns a
 ChatResponse with response text + optional rules_used + optional debug dict.
 
 Intent taxonomy
-───────────────
-  greeting          – hi, hello, hey, how are you …
-  weather           – weather in <city>
-  current_leader    – who is the president/pm of <country>
-  news              – news about <topic>
-  sports            – score / game / match / standings …
-  election          – election results, who won …
-  wcag              – any accessibility / WCAG question
-  general_chat      – everything else (→ Groq with no KB context)
+---------------
+  greeting          - hi, hello, hey, how are you
+  weather           - weather in <city>
+  current_leader    - who is the president/pm of <country>
+  news              - news about <topic>
+  sports            - score / game / match / standings
+  election          - election results, who won
+  wcag              - any accessibility / WCAG question
+  general_chat      - everything else (Groq with no KB context)
 
 All live-fact intents gracefully fall back if Google Search is not configured.
 """
@@ -70,14 +70,14 @@ class ChatResponse(BaseModel):
 
 # Each entry: (intent_label, compiled_regex)
 _INTENT_PATTERNS: list[tuple[str, re.Pattern]] = [
-    # Greetings – must come before general_chat
+    # Greetings - must come before general_chat
     ("greeting", re.compile(
         r"^\s*(hi|hello|hey|howdy|greetings|good\s+(morning|afternoon|evening)|"
         r"what'?s\s+up|sup|how\s+are\s+you|how'?s\s+it\s+going)\b",
         re.IGNORECASE,
     )),
 
-    # Weather – needs a city/place hint
+    # Weather - needs a city/place hint
     ("weather", re.compile(
         r"\b(weather|temperature|forecast|rain|snow|humid|wind|hot|cold|sunny|cloudy|"
         r"degrees|celsius|fahrenheit)\b.{0,80}\b(in|at|for|near)\b",
@@ -112,14 +112,14 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern]] = [
         re.IGNORECASE,
     )),
 
-    # News – broad, should come after more specific live-fact patterns
+    # News - broad, should come after more specific live-fact patterns
     ("news", re.compile(
         r"\b(news|latest|update|breaking|headline|what('?s|\s+is)\s+happening|"
         r"current\s+events|recent(ly)?|today'?s?)\b",
         re.IGNORECASE,
     )),
 
-    # WCAG / Accessibility – very broad, last before general_chat
+    # WCAG / Accessibility - very broad, last before general_chat
     ("wcag", re.compile(
         r"\b(wcag|accessibility|accessible|aria|screen\s+reader|color\s+contrast|"
         r"alt\s+text|alt\s+attribute|keyboard\s+(access|navigation|focus|trap)|"
@@ -203,7 +203,7 @@ def _extract_topic(msg: str, intent: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _handle_greeting(message: str, history: list) -> ChatResponse:
-    """Simple, warm greeting – no LLM needed for basic hellos."""
+    """Simple, warm greeting - no LLM needed for basic hellos."""
     # For richer greetings ("how are you"), ask Groq
     if re.search(r"\b(how\s+are\s+you|how'?s\s+it|what'?s\s+up)\b", message, re.IGNORECASE):
         text = ask_groq(message, wcag_context=[], history=history)
@@ -230,7 +230,7 @@ def _handle_weather(message: str, history: list, dbg: bool) -> ChatResponse:
         prompt = (
             f"The user asked: {message}\n\n"
             f"Live weather data: {fact.text}\n\n"
-            "Reply naturally in 1–3 sentences. Include the key numbers. "
+            "Reply naturally in 1-3 sentences. Include the key numbers. "
             "Mention the data is live."
         )
         response = ask_groq(prompt, wcag_context=[], history=history)
@@ -258,7 +258,7 @@ def _handle_current_leader(message: str, history: list, dbg: bool) -> ChatRespon
         prompt = (
             f"The user asked: {message}\n\n"
             f"Live data: {fact.text}\n\n"
-            "Answer naturally in 1–2 sentences. "
+            "Answer naturally in 1-2 sentences. "
             "If the data says 'Based on recent sources', quote it carefully. "
             "Do not invent or guess names."
         )
@@ -298,7 +298,7 @@ def _live_fact_response(
         prompt = (
             f"The user asked: {message}\n\n"
             f"Live {kind} data:\n{fact.text}\n\n"
-            "Summarise this concisely in 2–4 sentences for the user. "
+            "Summarise this concisely in 2-4 sentences for the user. "
             "Keep source attributions if present. "
             "Do not invent facts not present in the data above."
         )
