@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useMemo, ReactNode } from "react";
+import { useState, useEffect, useMemo, ReactNode, MouseEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Menu, 
@@ -135,6 +135,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
     window.dispatchEvent(new Event("a11y-progress-update"));
   };
 
+  const handleSkipToMain = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const main = document.getElementById("main-content");
+    main?.focus();
+    main?.scrollIntoView({ block: "start" });
+  };
+
   // Filters candidates
   const filteredCriteria = wcagCriteria.filter((item) => {
     const matchesSearch = 
@@ -189,6 +196,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       {/* WCAG 2.4.1 Skip Link: Critical keyboard accessibility requirement */}
       <a 
         href="#main-content" 
+        onClick={handleSkipToMain}
         className="absolute top-4 left-4 z-100 bg-slate-900 text-white font-bold text-sm px-4 py-2.5 rounded-lg shadow-xl tracking-wide opacity-0 focus:opacity-100 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-900 transition-opacity"
       >
         Skip to main content
@@ -432,16 +440,28 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {principles.map((pr) => {
               const items = filteredCriteria.filter(c => c.principle === pr);
               if (items.length === 0) return null;
+              const principleId = `sidebar-principle-${pr.toLowerCase()}`;
+              const principleDescriptionId = `${principleId}-description`;
 
               return (
-                <div key={pr} className="space-y-3.5">
-                  <h3 className="text-[10px] text-slate-500 uppercase font-bold tracking-widest px-2 pb-1 border-b border-slate-100 flex items-center justify-between">
+                <section
+                  key={pr}
+                  className="space-y-3.5"
+                  aria-labelledby={principleId}
+                >
+                  <h2
+                    id={principleId}
+                    className="text-[10px] text-slate-500 uppercase font-bold tracking-widest px-2 pb-1 border-b border-slate-100 flex items-center justify-between"
+                  >
                     <span>{pr}</span>
                     <span className="font-mono text-[9px] bg-indigo-50 text-indigo-700 font-bold px-1.5 py-0.5 rounded">
                       {items.length}
                     </span>
-                  </h3>
-                  <ul className="space-y-1">
+                  </h2>
+                  <p id={principleDescriptionId} className="sr-only">
+                    Belongs to the WCAG {pr} principle.
+                  </p>
+                  <ul className="space-y-1" aria-labelledby={principleId}>
                     {items.map((criterion) => {
                       const isActive = location.pathname === `/app/criterion/${criterion.id}`;
 
@@ -460,12 +480,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         <li key={criterion.id}>
                           <Link
                             to={`/app/criterion/${criterion.id}`}
+                            data-current-criterion-link={isActive ? "true" : undefined}
                             className={`group flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-xs leading-5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
                               isActive
                                 ? "bg-indigo-50 text-indigo-900 font-bold"
                                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                             aria-current={isActive ? "page" : undefined}
+                            aria-describedby={principleDescriptionId}
                           >
                             <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded shrink-0 font-bold tracking-tight transition-colors ${
                               isCompleted
@@ -477,7 +499,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                               {isCompleted ? "✓" : criterion.id}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <span className="block truncate font-medium">{criterion.title}</span>
+                              <span className="block truncate font-medium">
+                                {criterion.title}
+                                <span className="sr-only">, {pr} principle</span>
+                              </span>
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <span className={`inline-block text-[9px] font-bold ${
                                   criterion.level === "A" ? "text-blue-600" : "text-indigo-600"
@@ -500,7 +525,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       );
                     })}
                   </ul>
-                </div>
+                </section>
               );
             })}
 

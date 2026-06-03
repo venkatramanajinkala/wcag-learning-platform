@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
   BookOpen, 
@@ -33,6 +33,9 @@ export default function CriterionPage() {
 
   // Maintain local state for checkboxes specific to this criterion
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const articleRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusedCriterionIdRef = useRef<string | null>(null);
 
   // Load checklist state from localStorage on mount & when notified of updates
   useEffect(() => {
@@ -53,6 +56,19 @@ export default function CriterionPage() {
     };
   }, [id, criterion]);
 
+  useEffect(() => {
+    const criterionId = criterion?.id;
+    if (!criterionId || focusedCriterionIdRef.current === criterionId) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      if (focusedCriterionIdRef.current === criterionId) return;
+      headingRef.current?.focus();
+      focusedCriterionIdRef.current = criterionId;
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [criterion?.id]);
+
   // Toggle item in audit checklist
   const toggleAuditItem = (key: string) => {
     if (!criterion) return;
@@ -60,6 +76,40 @@ export default function CriterionPage() {
     const updated = { ...checkedItems, [key]: completed };
     setCheckedItems(updated);
     saveProgress(criterion.id, key, completed);
+  };
+
+  const handleArticleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== "Tab" || event.shiftKey || !articleRef.current) return;
+
+    const tabbableElements = (
+      Array.from(articleRef.current.querySelectorAll(
+        [
+          "a[href]",
+          "button:not([disabled])",
+          "input:not([disabled])",
+          "select:not([disabled])",
+          "textarea:not([disabled])",
+          "[tabindex]:not([tabindex='-1'])",
+        ].join(", "),
+      )) as HTMLElement[]
+    ).filter((element) => {
+      const isVisible =
+        element.offsetWidth > 0 ||
+        element.offsetHeight > 0 ||
+        element.getClientRects().length > 0;
+      return isVisible && element.tabIndex >= 0 && element.getAttribute("aria-hidden") !== "true";
+    });
+
+    const lastTabbable = tabbableElements[tabbableElements.length - 1];
+    if (document.activeElement !== lastTabbable) return;
+
+    const activeSidebarLink = document.querySelector<HTMLElement>(
+      '[data-current-criterion-link="true"]',
+    );
+    if (!activeSidebarLink) return;
+
+    event.preventDefault();
+    activeSidebarLink.focus();
   };
 
   if (!criterion) {
@@ -82,7 +132,12 @@ export default function CriterionPage() {
   }
 
   return (
-    <article className="space-y-8" aria-labelledby="criterion-headline">
+    <article
+      ref={articleRef}
+      className="space-y-8"
+      aria-labelledby="criterion-headline"
+      onKeyDown={handleArticleKeyDown}
+    >
       
       {/* Visual Navigation Breadcrumbs */}
       <nav aria-label="Breadcrumb Navigation" className="flex items-center gap-2 text-xs text-slate-450 font-bold">
@@ -108,7 +163,12 @@ export default function CriterionPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 id="criterion-headline" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          <h1
+            ref={headingRef}
+            id="criterion-headline"
+            tabIndex={-1}
+            className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight focus:outline-none"
+          >
             WCAG {criterion.id}: {criterion.title}
           </h1>
           <p className="text-slate-600 text-sm font-medium max-w-4xl leading-relaxed">
