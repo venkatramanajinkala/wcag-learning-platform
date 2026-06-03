@@ -35,6 +35,12 @@ export interface ChatRuleReference {
   title: string;
 }
 
+export interface SearchSource {
+  title: string;
+  url: string;
+  domain: string;
+}
+
 export interface ChatResponse {
   response: string;
   rules_used: ChatRuleReference[];
@@ -44,6 +50,9 @@ export interface ChatResponse {
    *         election | wcag | general_chat
    */
   intent: string;
+  search_used: boolean;
+  sources: SearchSource[];
+  answer_confidence: "kb" | "live" | "training" | "fallback";
   /**
    * Only present when the request was sent with debug: true.
    * Contains internal routing metadata (matched_rules, search query, etc.)

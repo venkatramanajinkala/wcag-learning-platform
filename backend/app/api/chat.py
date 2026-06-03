@@ -1,22 +1,11 @@
 """
 chat.py
 -------
-Main chat router.  Receives (session_id, message, debug?) from the frontend,
-classifies intent, routes to the right handler, and returns a
-ChatResponse with response text + optional rules_used + optional debug dict.
+Main chat router. Receives (session_id, message, debug?) from the frontend,
+classifies intent, routes to the right handler, and returns a ChatResponse.
 
-Intent taxonomy
----------------
-  greeting          - hi, hello, hey, how are you
-  weather           - weather in <city>
-  current_leader    - who is the president/pm of <country>
-  news              - news about <topic>
-  sports            - score / game / match / standings
-  election          - election results, who won
-  wcag              - any accessibility / WCAG question
-  general_chat      - everything else (Groq with no KB context)
-
-All live-fact intents gracefully fall back if Google Search is not configured.
+Live-fact handlers only answer from injected live data. If live search is not
+configured, they return honest fallback responses instead of guessing.
 """
 
 from __future__ import annotations
@@ -35,6 +24,7 @@ from app.services.current_facts import (
     get_news,
     get_sports,
     get_weather,
+    get_wcag_live,
 )
 from app.services.groq_client import ask_groq
 from app.services.wcag_kb import get_wcag_rules
@@ -46,10 +36,16 @@ router = APIRouter(tags=["chat"])
 # Schemas
 # ---------------------------------------------------------------------------
 
+class SearchSource(BaseModel):
+    title: str
+    url: str
+    domain: str
+
+
 class ChatRequest(BaseModel):
     session_id: str = Field(min_length=1, max_length=100)
     message: str = Field(min_length=1, max_length=2000)
-    debug: bool = False        # if True, attach internal routing info to response
+    debug: bool = False
 
 
 class RuleReference(BaseModel):
@@ -60,66 +56,54 @@ class RuleReference(BaseModel):
 class ChatResponse(BaseModel):
     response: str
     rules_used: list[RuleReference] = []
-    intent: str = ""           # always set; helps client-side debugging
-    debug: dict[str, Any] | None = None   # only present when request.debug=True
+    intent: str = ""
+    search_used: bool = False
+    sources: list[SearchSource] = []
+    answer_confidence: str = "kb"
+    debug: dict[str, Any] | None = None
 
 
 # ---------------------------------------------------------------------------
 # Intent detection
 # ---------------------------------------------------------------------------
 
-# Each entry: (intent_label, compiled_regex)
 _INTENT_PATTERNS: list[tuple[str, re.Pattern]] = [
-    # Greetings - must come before general_chat
     ("greeting", re.compile(
         r"^\s*(hi|hello|hey|howdy|greetings|good\s+(morning|afternoon|evening)|"
         r"what'?s\s+up|sup|how\s+are\s+you|how'?s\s+it\s+going)\b",
         re.IGNORECASE,
     )),
-
-    # Weather - needs a city/place hint
     ("weather", re.compile(
         r"\b(weather|temperature|forecast|rain|snow|humid|wind|hot|cold|sunny|cloudy|"
         r"degrees|celsius|fahrenheit)\b.{0,80}\b(in|at|for|near)\b",
         re.IGNORECASE,
     )),
-    # Also catch "weather in X" even without the second part
     ("weather", re.compile(
         r"\b(weather|forecast|temperature)\s+(in|at|for|near)\s+\w",
         re.IGNORECASE,
     )),
-
-    # Current leader
     ("current_leader", re.compile(
         r"\b(who\s+is\s+(the\s+)?(current\s+)?(president|prime\s+minister|chancellor|"
         r"premier|leader|pm|ceo|head\s+of\s+(state|government))|"
         r"current\s+(president|prime\s+minister|chancellor|premier|leader)\s+of)\b",
         re.IGNORECASE,
     )),
-
-    # Sports
     ("sports", re.compile(
         r"\b(score|scores|match|game|fixture|standings|league|tournament|"
         r"championship|nba|nfl|premier\s+league|fifa|nhl|mlb|f1|formula\s+one|"
         r"tennis|cricket|rugby|goal|won|lost|draw|result)\b",
         re.IGNORECASE,
     )),
-
-    # Elections
     ("election", re.compile(
         r"\b(election|vote|voted|referendum|ballot|polling|won\s+the\s+election|"
         r"election\s+result|elected\s+president|elected\s+pm)\b",
         re.IGNORECASE,
     )),
-
-    # News - broad, should come after more specific live-fact patterns
     ("news", re.compile(
         r"\b(news|latest|update|breaking|headline|what('?s|\s+is)\s+happening|"
         r"current\s+events|recent(ly)?|today'?s?)\b",
         re.IGNORECASE,
     )),
-
-    # WCAG / Accessibility - very broad, last before general_chat
     ("wcag", re.compile(
         r"\b(wcag|accessibility|accessible|aria|screen\s+reader|color\s+contrast|"
         r"alt\s+text|alt\s+attribute|keyboard\s+(access|navigation|focus|trap)|"
@@ -133,6 +117,13 @@ _INTENT_PATTERNS: list[tuple[str, re.Pattern]] = [
     )),
 ]
 
+_LIVE_SIGNAL_RE = re.compile(
+    r"\b(latest|current|2024|2025|2026|new|recently|"
+    r"just\s+released|still|now|today|this\s+year|"
+    r"updated|version|what.s\s+new)\b",
+    re.IGNORECASE,
+)
+
 
 def _detect_intent(message: str) -> str:
     """Return the first matching intent label, or 'general_chat'."""
@@ -140,6 +131,10 @@ def _detect_intent(message: str) -> str:
         if pattern.search(message):
             return label
     return "general_chat"
+
+
+def _needs_live_verification(message: str) -> bool:
+    return bool(_LIVE_SIGNAL_RE.search(message))
 
 
 # ---------------------------------------------------------------------------
@@ -170,7 +165,6 @@ def _extract_city(msg: str) -> str:
     m = _CITY_RE.search(msg)
     if m:
         return m.group(1).strip()
-    # Fallback: last word-cluster after "in/at/for/near"
     m2 = re.search(r"\b(?:in|at|for|near)\s+([A-Za-z\s]{2,25})", msg, re.IGNORECASE)
     return m2.group(1).strip() if m2 else ""
 
@@ -188,7 +182,6 @@ def _extract_country_and_role(msg: str) -> tuple[str, str]:
 
 def _extract_topic(msg: str, intent: str) -> str:
     """Best-effort topic extraction for news/sports/elections."""
-    # Remove common filler phrases
     cleaned = re.sub(
         r"\b(what('?s)?|tell me|give me|latest|news|about|update|on|the|is there|"
         r"any|score|result|election|did|who|when|where)\b",
@@ -198,13 +191,60 @@ def _extract_topic(msg: str, intent: str) -> str:
     return cleaned or msg[:60]
 
 
+def _build_sources(fact: "FactResult") -> list["SearchSource"]:
+    sources = []
+    debug = getattr(fact, "debug", {}) or {}
+    raw_source = getattr(fact, "source", "") or ""
+
+    if raw_source and raw_source not in ("open-meteo.com", "google-search", ""):
+        sources.append(SearchSource(title="Search result", url="", domain=raw_source))
+
+    if raw_source == "open-meteo.com":
+        sources.append(SearchSource(
+            title="Open-Meteo Weather API",
+            url="https://open-meteo.com",
+            domain="open-meteo.com",
+        ))
+    elif raw_source == "google-search":
+        sources.append(SearchSource(
+            title="Google Search",
+            url="",
+            domain="google.com",
+        ))
+
+    return sources
+
+
+def _live_search_disabled_response(intent: str, message: str) -> ChatResponse:
+    if intent == "news":
+        response = (
+            "Live search isn't configured right now. "
+            "For current news, please check a reliable news source directly."
+        )
+    elif intent == "weather":
+        response = (
+            "I don't have access to live search right now. "
+            "Please check a reliable weather source for current conditions."
+        )
+    else:
+        response = (
+            "I don't have access to live search right now. "
+            "Please check a reliable source for current information."
+        )
+    return ChatResponse(
+        response=response,
+        intent=intent,
+        search_used=False,
+        answer_confidence="fallback",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Route handlers
 # ---------------------------------------------------------------------------
 
 def _handle_greeting(message: str, history: list) -> ChatResponse:
     """Simple, warm greeting - no LLM needed for basic hellos."""
-    # For richer greetings ("how are you"), ask Groq
     if re.search(r"\b(how\s+are\s+you|how'?s\s+it|what'?s\s+up)\b", message, re.IGNORECASE):
         text = ask_groq(message, wcag_context=[], history=history)
     else:
@@ -212,21 +252,25 @@ def _handle_greeting(message: str, history: list) -> ChatResponse:
             "Hey! I'm your A11yPlay WCAG Assistant. "
             "Ask me about accessibility, WCAG criteria, live facts, weather, or anything else!"
         )
-    return ChatResponse(response=text, intent="greeting")
+    return ChatResponse(response=text, intent="greeting", answer_confidence="training")
 
 
 def _handle_weather(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+    if not get_settings().live_search_enabled:
+        return _live_search_disabled_response("weather", message)
+
     city = _extract_city(message)
     if not city:
         return ChatResponse(
             response="Which city would you like the weather for?",
             intent="weather",
+            answer_confidence="fallback",
         )
 
     fact: FactResult = get_weather(city)
 
     if fact.success:
-        # Let Groq rephrase into a conversational tone
         prompt = (
             f"The user asked: {message}\n\n"
             f"Live weather data: {fact.text}\n\n"
@@ -235,21 +279,29 @@ def _handle_weather(message: str, history: list, dbg: bool) -> ChatResponse:
         )
         response = ask_groq(prompt, wcag_context=[], history=history)
     else:
-        response = fact.text  # already a user-friendly fallback
+        response = fact.text
 
     return ChatResponse(
         response=response,
         intent="weather",
+        search_used=fact.success,
+        sources=_build_sources(fact) if fact.success else [],
+        answer_confidence="live" if fact.success else "fallback",
         debug=fact.debug if dbg else None,
     )
 
 
 def _handle_current_leader(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+    if not get_settings().live_search_enabled:
+        return _live_search_disabled_response("current_leader", message)
+
     country, role = _extract_country_and_role(message)
     if not country:
         return ChatResponse(
             response="Which country are you asking about?",
             intent="current_leader",
+            answer_confidence="fallback",
         )
 
     fact: FactResult = get_current_leader(country, role)
@@ -269,26 +321,53 @@ def _handle_current_leader(message: str, history: list, dbg: bool) -> ChatRespon
     return ChatResponse(
         response=response,
         intent="current_leader",
+        search_used=fact.success,
+        sources=_build_sources(fact) if fact.success else [],
+        answer_confidence="live" if fact.success else "fallback",
         debug=fact.debug if dbg else None,
     )
 
 
 def _handle_news(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+    if not get_settings().live_search_enabled:
+        return _live_search_disabled_response("news", message)
+
     topic = _extract_topic(message, "news")
     fact = get_news(topic)
-    return _live_fact_response("news", message, fact, history, dbg)
+    result = _live_fact_response("news", message, fact, history, dbg)
+    result.search_used = fact.success
+    result.answer_confidence = "live" if fact.success else "fallback"
+    result.sources = _build_sources(fact) if fact.success else []
+    return result
 
 
 def _handle_sports(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+    if not get_settings().live_search_enabled:
+        return _live_search_disabled_response("sports", message)
+
     topic = _extract_topic(message, "sports")
     fact = get_sports(topic)
-    return _live_fact_response("sports", message, fact, history, dbg)
+    result = _live_fact_response("sports", message, fact, history, dbg)
+    result.search_used = fact.success
+    result.answer_confidence = "live" if fact.success else "fallback"
+    result.sources = _build_sources(fact) if fact.success else []
+    return result
 
 
 def _handle_election(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+    if not get_settings().live_search_enabled:
+        return _live_search_disabled_response("election", message)
+
     topic = _extract_topic(message, "election")
     fact = get_election(topic)
-    return _live_fact_response("election", message, fact, history, dbg)
+    result = _live_fact_response("election", message, fact, history, dbg)
+    result.search_used = fact.success
+    result.answer_confidence = "live" if fact.success else "fallback"
+    result.sources = _build_sources(fact) if fact.success else []
+    return result
 
 
 def _live_fact_response(
@@ -309,25 +388,83 @@ def _live_fact_response(
     return ChatResponse(
         response=response,
         intent=kind,
+        search_used=fact.success,
+        sources=_build_sources(fact) if fact.success else [],
+        answer_confidence="live" if fact.success else "fallback",
         debug=fact.debug if dbg else None,
     )
 
 
 def _handle_wcag(message: str, history: list, dbg: bool) -> ChatResponse:
+    from app.core.config import get_settings
+
     matched_rules = get_wcag_rules(message)
-    response = ask_groq(message, wcag_context=matched_rules, history=history)
+    sources: list[SearchSource] = []
+    search_used = False
+    live_context = ""
+
+    if _needs_live_verification(message) or not matched_rules:
+        if get_settings().live_search_enabled:
+            fact = get_wcag_live(message)
+            if fact.success:
+                live_context = fact.text
+                search_used = True
+                sources = _build_sources(fact)
+
+    if live_context and matched_rules:
+        context_lines = "\n".join(
+            f"- {r['id']} | {r['title']}: {r['summary']}"
+            for r in matched_rules
+        )
+        prompt = (
+            f"{message}\n\n"
+            f"WCAG Knowledge Base context:\n{context_lines}\n\n"
+            f"Live search data (authoritative, use this for current facts):\n{live_context}\n\n"
+            "Answer using both sources. Cite the WCAG criterion briefly if relevant. "
+            "Prioritise live data for any version-specific or current information."
+        )
+    elif live_context:
+        prompt = (
+            f"{message}\n\n"
+            f"Live search data:\n{live_context}\n\n"
+            "Answer based on this live data only. Do not add information from training."
+        )
+    elif matched_rules:
+        context_lines = "\n".join(
+            f"- {r['id']} | {r['title']}: {r['summary']}"
+            for r in matched_rules
+        )
+        prompt = (
+            f"{message}\n\n"
+            f"Relevant WCAG context:\n{context_lines}\n\n"
+            "Answer directly. Cite at most one criterion briefly if relevant."
+        )
+    else:
+        prompt = (
+            f"{message}\n\n"
+            "LIVE DATA MISSING. Answer only what you know from WCAG training. "
+            "If this is a current-version or recent-update question, say you cannot verify "
+            "the latest information and direct the user to w3.org."
+        )
+
+    response = ask_groq(prompt, wcag_context=[], history=history)
     rules_used = [RuleReference(id=r["id"], title=r["title"]) for r in matched_rules]
+    confidence = "live" if search_used else ("kb" if matched_rules else "training")
+
     return ChatResponse(
         response=response,
         intent="wcag",
         rules_used=rules_used,
-        debug={"matched_rules": [r["id"] for r in matched_rules]} if dbg else None,
+        search_used=search_used,
+        sources=sources,
+        answer_confidence=confidence,
+        debug={"matched_rules": [r["id"] for r in matched_rules], "live_used": search_used} if dbg else None,
     )
 
 
 def _handle_general(message: str, history: list, dbg: bool) -> ChatResponse:
     response = ask_groq(message, wcag_context=[], history=history)
-    return ChatResponse(response=response, intent="general_chat")
+    return ChatResponse(response=response, intent="general_chat", answer_confidence="training")
 
 
 # ---------------------------------------------------------------------------
@@ -356,11 +493,9 @@ def chat(request: ChatRequest) -> ChatResponse:
 
     result: ChatResponse = dispatch.get(intent, dispatch["general_chat"])()
 
-    # Always tag the intent even if the handler didn't set it
     if not result.intent:
         result.intent = intent
 
-    # Update session memory
     append_session_turn(session_id, "user", message)
     append_session_turn(session_id, "assistant", result.response)
 

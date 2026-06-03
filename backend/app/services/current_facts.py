@@ -326,6 +326,44 @@ def get_election(country_or_topic: str) -> FactResult:
     return _summarise_search("election", country_or_topic, resp)
 
 
+def get_wcag_live(topic: str) -> FactResult:
+    """
+    Search for live/current WCAG and accessibility information.
+    Scoped to authoritative accessibility domains.
+    """
+    from app.services.google_search import search_wcag
+
+    resp: SearchResponse = search_wcag(topic)
+
+    debug_info = {
+        "query": resp.query,
+        "results": len(resp.results),
+        "elapsed_ms": resp.elapsed_ms,
+    }
+
+    if not resp.ok:
+        return FactResult(
+            success=False,
+            text=_FALLBACK_TEXT,
+            source="google-search",
+            debug={**debug_info, "error": resp.error},
+        )
+
+    summary = resp.combined_snippets(n=3)
+    sources = ", ".join({r.source for r in resp.results[:3]})
+
+    return FactResult(
+        success=True,
+        text=(
+            f"Here is current information about **{topic}** from authoritative sources:\n\n"
+            f"{summary}\n\n"
+            f"*(Sources: {sources})*"
+        ),
+        source="google-search",
+        debug=debug_info,
+    )
+
+
 def _summarise_search(kind: str, topic: str, resp: SearchResponse) -> FactResult:
     debug_info = {
         "kind": kind,

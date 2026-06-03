@@ -10,6 +10,9 @@ interface ChatMessage {
     id: string;
     title: string;
   }>;
+  searchUsed?: boolean;
+  sources?: Array<{ title: string; url: string; domain: string }>;
+  answerConfidence?: "kb" | "live" | "training" | "fallback";
 }
 
 function newId() {
@@ -25,6 +28,38 @@ function getOrCreateSessionId() {
     window.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   window.localStorage.setItem(key, created);
   return created;
+}
+
+function ConfidenceBadge({ confidence }: { confidence?: string }) {
+  if (!confidence || confidence === "training") return null;
+
+  const configs = {
+    live: {
+      label: "Live Search",
+      className: "bg-emerald-50 border-emerald-200 text-emerald-700",
+      dot: "bg-emerald-400",
+    },
+    kb: {
+      label: "Knowledge Base",
+      className: "bg-indigo-50 border-indigo-200 text-indigo-700",
+      dot: "bg-indigo-400",
+    },
+    fallback: {
+      label: "Could not verify",
+      className: "bg-amber-50 border-amber-200 text-amber-700",
+      dot: "bg-amber-400",
+    },
+  };
+
+  const config = configs[confidence as keyof typeof configs];
+  if (!config) return null;
+
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${config.className}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
+      {config.label}
+    </span>
+  );
 }
 
 export default function ChatWidget() {
@@ -73,6 +108,9 @@ export default function ChatWidget() {
           role: "assistant",
           content: response.response,
           rulesUsed: response.rules_used,
+          searchUsed: response.search_used,
+          sources: response.sources,
+          answerConfidence: response.answer_confidence,
         },
       ]);
     } catch (error) {
@@ -154,6 +192,11 @@ export default function ChatWidget() {
               }`}
             >
               <p className="whitespace-pre-wrap">{message.content}</p>
+              {message.answerConfidence && message.answerConfidence !== "training" && (
+                <div className="mt-2">
+                  <ConfidenceBadge confidence={message.answerConfidence} />
+                </div>
+              )}
               {message.rulesUsed && message.rulesUsed.length > 0 && (
                 <div className="mt-3 border-t border-slate-200 pt-2">
                   <p className="mb-2 text-[10px] font-black uppercase tracking-wide text-slate-500">
@@ -167,6 +210,23 @@ export default function ChatWidget() {
                       >
                         <span className="font-mono">{rule.id}</span>
                         <span className="max-w-[10rem] truncate">{rule.title}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {message.sources && message.sources.length > 0 && (
+                <div className="mt-2 border-t border-slate-100 pt-2">
+                  <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-slate-400">
+                    Sources
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {message.sources.map((source, i) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-600"
+                      >
+                        {source.domain}
                       </span>
                     ))}
                   </div>

@@ -19,11 +19,16 @@ from __future__ import annotations
 import re
 import time
 from dataclasses import dataclass, field
+from threading import Lock
 from typing import Any
 
+from cachetools import TTLCache
 import requests
 
 from app.core.config import get_settings
+
+_search_cache: TTLCache = TTLCache(maxsize=256, ttl=600)  # 10 min default
+_cache_lock = Lock()
 
 
 # ---------------------------------------------------------------------------
@@ -168,6 +173,12 @@ def google_search(
             error="Google Search is not configured (GOOGLE_SEARCH_API_KEY / GOOGLE_SEARCH_CX missing).",
         )
 
+    cache_key = f"{query}|{date_restrict or ''}|{num}"
+    with _cache_lock:
+        cached = _search_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
     queries_to_try = [query] + (fallback_queries or [])
     last_error: str | None = None
 
@@ -181,6 +192,8 @@ def google_search(
             debug=debug,
         )
         if resp.ok:
+            with _cache_lock:
+                _search_cache[cache_key] = resp
             return resp
         last_error = resp.error or "no results"
 
@@ -311,6 +324,26 @@ def search_election(country_or_topic: str) -> SearchResponse:
         f"{country_or_topic} election latest",
     ]
     return google_search(primary, num=5, fallback_queries=fallbacks, date_restrict="y1")
+
+
+def search_wcag(topic: str) -> SearchResponse:
+    """
+    Search for WCAG/accessibility information scoped to authoritative domains.
+    Uses site-restricted query with fallback to broad search.
+    """
+    scoped_query = (
+        f"{topic} site:w3.org OR site:webaim.org OR site:developer.mozilla.org "
+        f"OR site:www.w3.org/WAI"
+    )
+    broad_query = f"WCAG accessibility {topic} {_current_year()}"
+    fallback_query = f"{topic} WCAG criterion"
+
+    return google_search(
+        scoped_query,
+        num=5,
+        fallback_queries=[broad_query, fallback_query],
+        date_restrict="y2",
+    )
 
 
 def _current_year() -> int:
