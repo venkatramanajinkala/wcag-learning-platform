@@ -182,7 +182,7 @@ export default function CriterionPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1.5">
           {/* Objective Explainer */}
           <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
               Criterion Objective
             </span>

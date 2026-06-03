@@ -343,7 +343,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                     <Terminal className="w-3.5 h-3.5 text-red-400" />
                     HTML Code Editor (Failed style)
                   </span>
-                  <span className="text-slate-500">Ctrl+Enter to Run</span>
+                  <span className="text-slate-300">Ctrl+Enter to Run</span>
                 </div>
                 <textarea
                   value={badCode}
@@ -460,7 +460,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                     <Terminal className="w-3.5 h-3.5 text-emerald-400" />
                     HTML Code Editor (Compliant style)
                   </span>
-                  <span className="text-slate-500">Ctrl+Enter to Run</span>
+                  <span className="text-slate-300">Ctrl+Enter to Run</span>
                 </div>
                 <textarea
                   value={goodCode}
