@@ -46,11 +46,11 @@ export default function Signup() {
 
   return (
     <AuthLayout>
-      <div className="overflow-hidden rounded-[28px] border border-emerald-100 bg-[linear-gradient(180deg,#ffffff_0%,#f8fff9_100%)] shadow-lg shadow-emerald-100/40">
+      <div className="min-w-0 overflow-hidden rounded-[28px] border border-emerald-100 bg-[linear-gradient(180deg,#ffffff_0%,#f8fff9_100%)] shadow-lg shadow-emerald-100/40">
         <div className="h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-indigo-600" aria-hidden="true" />
         <div className="p-6 sm:p-8">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-600">
+          <div className="min-w-0 space-y-2">
+            <div className="inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
               <UserPlus className="h-3.5 w-3.5" />
               Create account
             </div>
@@ -69,7 +69,7 @@ export default function Signup() {
               <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-white px-3 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">or use email</span>
+              <span className="bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-slate-500">or use email</span>
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function Signup() {
               />
             </label>
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <Link to="/login" className="text-xs font-bold text-slate-700 hover:text-slate-900">
                 Already have an account?
               </Link>

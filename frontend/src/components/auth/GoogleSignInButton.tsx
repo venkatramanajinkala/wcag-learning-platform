@@ -61,7 +61,7 @@ export default function GoogleSignInButton() {
     google.accounts.id.renderButton(containerRef.current, {
       theme: "outline",
       size: "large",
-      width: 380,
+      width: Math.min(380, containerRef.current.clientWidth || 320),
       text: "continue_with",
       shape: "pill",
     });
@@ -69,6 +69,5 @@ export default function GoogleSignInButton() {
 
   if (!clientId) return null;
 
-  return <div ref={containerRef} className="w-full [&>div]:w-full" aria-label="Sign in with Google" />;
+  return <div ref={containerRef} className="w-full min-w-0 [&>div]:max-w-full [&>div]:w-full" aria-label="Sign in with Google" />;
 }
-

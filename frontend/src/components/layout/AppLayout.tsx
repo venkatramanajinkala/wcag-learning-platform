@@ -160,7 +160,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const principles = ["Perceivable", "Operable", "Understandable", "Robust"];
 
   return (
-    <div className={`min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans ${textSpacingEnabled ? "a11y-text-spacing" : ""}`}>
+    <div className={`min-h-screen min-w-0 bg-slate-50 text-slate-800 flex flex-col overflow-x-clip font-sans ${textSpacingEnabled ? "a11y-text-spacing" : ""}`}>
       {textSpacingEnabled && (
         <style dangerouslySetInnerHTML={{ __html: `
           .a11y-text-spacing *, 
@@ -204,7 +204,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Top Banner Landmarks */}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 shadow-xxs backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="mx-auto flex min-h-14 max-w-[1400px] flex-wrap items-center justify-between gap-3 px-3 py-2 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
@@ -237,7 +237,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-3">
-            <nav aria-label="Accessibility tools" className="hidden shrink-0 items-center gap-1 md:flex">
+            <nav aria-label="Accessibility tools" className="hidden shrink-0 flex-wrap items-center justify-end gap-1 xl:flex">
               {/* Focus highlight trigger */}
               <button
                 onClick={() => setFocusHighlightEnabled(!focusHighlightEnabled)}
@@ -277,7 +277,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </nav>
 
             {/* Primary navigation */}
-            <nav aria-label="Primary navigation" className="flex items-center justify-end gap-1.5">
+            <nav aria-label="Primary navigation" className="flex min-w-0 flex-wrap items-center justify-end gap-1.5">
               {(() => {
                 const isActive = location.pathname === "/app" || location.pathname.startsWith("/app/");
                 return (
@@ -299,12 +299,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </header>
 
       {/* Main Structural Boundary */}
-      <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row relative">
+      <div className="relative mx-auto flex w-full max-w-7xl min-w-0 flex-1 flex-col lg:flex-row">
         {/* Desktop Sidebar Landmarks */}
         <aside 
-          className={`lg:w-76 lg:border-r border-slate-200 bg-white shrink-0 lg:static fixed inset-y-16 left-0 w-80 transform ${
+          className={`lg:w-76 lg:border-r border-slate-200 bg-white shrink-0 lg:static fixed inset-y-16 left-0 w-[min(20rem,calc(100vw-1rem))] transform ${
             mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-          } transition-transform duration-200 z-20 flex flex-col overflow-y-auto max-h-[calc(100vh-4rem)] p-4 sm:p-5`}
+          } transition-transform duration-200 z-20 flex max-w-full flex-col overflow-y-auto max-h-[calc(100vh-4rem)] p-4 sm:p-5`}
           aria-label="Criteria Directory"
         >
           {/* Quick filter block */}
@@ -384,12 +384,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {/* Overall Audit Progress Widget */}
           <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50 border border-indigo-100 rounded-xl p-4 mb-6 space-y-3.5 shadow-xxs">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-[11px] font-extrabold text-indigo-950 uppercase tracking-wide">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="flex min-w-0 items-center gap-1.5 text-[11px] font-extrabold text-indigo-950 uppercase tracking-wide">
                 <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 <span>Overall Audit Progress</span>
               </span>
-              <span className="font-mono text-xs font-black text-indigo-700 bg-white border border-indigo-100/50 px-2 py-0.5 rounded-full shadow-xxs">
+              <span className="shrink-0 font-mono text-xs font-black text-indigo-700 bg-white border border-indigo-100/50 px-2 py-0.5 rounded-full shadow-xxs">
                 {progressStats.percentComplete}%
               </span>
             </div>
@@ -499,11 +499,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
                               {isCompleted ? "✓" : criterion.id}
                             </span>
                             <div className="flex-1 min-w-0">
-                              <span className="block truncate font-medium">
+                              <span className="block font-medium leading-5">
                                 {criterion.title}
                                 <span className="sr-only">, {pr} principle</span>
                               </span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
+                              <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
                                 <span className={`inline-block text-[9px] font-bold ${
                                   criterion.level === "A" ? "text-blue-600" : "text-indigo-600"
                                 }`}>
@@ -562,14 +562,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <main 
           id="main-content" 
           tabIndex={-1} 
-          className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto focus:outline-none min-w-0"
+          className="min-w-0 flex-1 overflow-y-auto p-3 focus:outline-none sm:p-5 lg:p-8"
         >
           {children}
         </main>
       </div>
 
       <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-6 text-xs text-slate-500 sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+        <div className="mx-auto grid max-w-7xl min-w-0 gap-4 px-4 py-6 text-xs text-slate-500 sm:px-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:items-center">
           <div className="space-y-1">
             <p className="font-semibold text-slate-700">A11yPlay Platform</p>
             <p>Accessibility-first learning, progress tracking, and audit practice in one place.</p>
