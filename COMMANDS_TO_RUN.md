@@ -1,126 +1,127 @@
-# Commands to run this project manually
+# Commands to Run the Project
 
-Open PowerShell or Command Prompt, then run these commands.
+Use these commands when running the project manually in PowerShell.
 
-## Current folder structure
+## First-Time Setup
+
+From the project root:
+
+```powershell
+copy backend\.env.example backend\.env
+copy frontend\.env.example frontend\.env
+```
+
+Edit `backend\.env` and set at least:
 
 ```text
-wcag-learning-platform/
-  frontend/   React + Vite app
-  backend/    FastAPI backend API
+SECRET_KEY=replace-with-a-long-random-secret
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
-## Quick start: run backend and frontend
-
-You need two terminal windows.
-
-## Terminal 1: Start the backend
-
-```powershell
-cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\backend
-```
-
-First-time setup only:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-copy .env.example .env
-```
-
-Normal backend start command:
-
-```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Backend API docs:
-
-```text
-http://localhost:8000/docs
-```
-
-## Terminal 2: Start the frontend
-
-```powershell
-cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\frontend
-```
-
-First-time setup only:
-
-Use `npm.cmd` on this computer because PowerShell is blocking `npm.ps1`.
-
-```powershell
-npm.cmd install
-```
-
-Make sure `frontend\.env` has:
+Edit `frontend\.env` and set:
 
 ```text
 VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
-Normal frontend start command:
+## Terminal 1: Backend
+
+First-time dependency setup:
 
 ```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+Start the backend:
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+API docs:
+
+```text
+http://localhost:8000/docs
+```
+
+## Terminal 2: Frontend
+
+First-time dependency setup:
+
+```powershell
+cd frontend
+npm.cmd install
+```
+
+Start the frontend:
+
+```powershell
+cd frontend
 npm.cmd run dev
 ```
 
-Open this in your browser:
+Open:
 
 ```text
 http://localhost:3000/login
 ```
 
-## Check commands
+## Check Commands
 
-Frontend TypeScript check:
+Frontend type check:
 
 ```powershell
+cd frontend
 npm.cmd run lint
 ```
 
 Frontend production build:
 
 ```powershell
+cd frontend
 npm.cmd run build
 ```
 
-Backend Python compile check:
+Backend compile check:
 
 ```powershell
-cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\backend
+cd backend
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-## Important notes
+## Google Sign-In Checklist
 
-- The React app is now inside the `frontend` folder.
-- Run frontend commands from `wcag-learning-platform\frontend`.
-- The frontend already has `package.json`, so you do not need to run `npm init -y`.
-- The frontend already has `tsconfig.json`, so you do not need to create it again.
-- This project uses Vite, so the start command is `npm.cmd run dev`, not `npm start`.
-- Keep both backend and frontend terminal windows open while using the app.
-- If Google login says `Token used too early`, sync Windows time: Settings -> Time & language -> Date & time -> Sync now.
-- For local Google login, Google Cloud OAuth must allow these JavaScript origins:
+Google Cloud OAuth Authorized JavaScript origins for local development:
 
 ```text
 http://localhost:3000
 http://127.0.0.1:3000
 ```
 
-## Deployment settings
-
-Vercel frontend from GitHub:
+Use the same client ID in:
 
 ```text
-Base directory: frontend
+backend\.env   GOOGLE_CLIENT_ID
+frontend\.env  VITE_GOOGLE_CLIENT_ID
+```
+
+If login reports `Token used too early`, sync the computer clock and retry.
+
+## Production Deployment Summary
+
+Vercel frontend:
+
+```text
+Root directory: frontend
 Build command: npm run build
 Output directory: dist
 Environment variables:
-  VITE_API_URL=https://your-render-api.onrender.com
+  VITE_API_URL=https://your-backend.example.com
   VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
@@ -131,20 +132,11 @@ Root directory: backend
 Build command: pip install -r requirements.txt
 Start command: uvicorn app.main:app --host 0.0.0.0 --port $PORT
 Environment variables:
-  SECRET_KEY=your-long-secret
-  DATABASE_URL=your-render-postgres-url
-  BACKEND_CORS_ORIGINS=https://your-vercel-site.vercel.app
-  BACKEND_CORS_ORIGIN_REGEX=https://.*\.vercel\.app
-  FRONTEND_URL=https://your-vercel-site.vercel.app
-  GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
   ENVIRONMENT=production
-```
-
-## If you specifically need to install packages one by one
-
-Usually `npm.cmd install` is enough. But these are the package commands:
-
-```powershell
-npm.cmd install react react-dom react-router-dom
-npm.cmd install --save-dev typescript @types/react @types/react-dom
+  SECRET_KEY=replace-with-a-long-random-secret
+  DATABASE_URL=your-postgres-connection-string
+  BACKEND_CORS_ORIGINS=https://your-vercel-app.vercel.app
+  BACKEND_CORS_ORIGIN_REGEX=https://.*\.vercel\.app
+  FRONTEND_URL=https://your-vercel-app.vercel.app
+  GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```

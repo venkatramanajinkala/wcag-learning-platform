@@ -1,11 +1,4 @@
-"""
-config.py
----------
-Application settings loaded from environment / .env file.
-New additions vs original:
-  - google_search_api_key  (Google Custom Search JSON API key)
-  - google_search_cx       (Programmable Search Engine ID / cx)
-"""
+"""Application settings loaded from environment variables or a local .env file."""
 
 from functools import lru_cache
 
@@ -18,12 +11,8 @@ class Settings(BaseSettings):
     secret_key: str = "change-this-before-production"
     access_token_expire_minutes: int = 60 * 24 * 7
     database_url: str = "sqlite:///./a11yplay.db"
-    backend_cors_origins: str = (
-        "http://localhost:3000,"
-        "http://127.0.0.1:3000,"
-        "https://a11y-learning.netlify.app"
-    )
-    backend_cors_origin_regex: str = r"https://.*\.netlify\.app"
+    backend_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+    backend_cors_origin_regex: str = r"https://.*\.vercel\.app"
     frontend_url: str = "http://localhost:3000"
     reset_token_expire_minutes: int = 30
 
@@ -46,11 +35,9 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "llama-3.1-8b-instant"
 
-    # ── NEW: Google Custom Search ─────────────────────────────────────────
-    # Get these from https://programmablesearchengine.google.com/
-    # and https://console.developers.google.com/ (Custom Search JSON API)
+    # Optional Google Custom Search credentials for current-information answers.
     google_search_api_key: str = ""
-    google_search_cx: str = ""          # Search Engine ID (cx)
+    google_search_cx: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -60,7 +47,7 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        return [o.strip() for o in self.backend_cors_origins.split(",") if o.strip()]
+        return [origin.strip() for origin in self.backend_cors_origins.split(",") if origin.strip()]
 
     @property
     def sender_email(self) -> str:
@@ -68,7 +55,6 @@ class Settings(BaseSettings):
 
     @property
     def live_search_enabled(self) -> bool:
-        """True when Google Search credentials are present."""
         return bool(self.google_search_api_key and self.google_search_cx)
 
 
