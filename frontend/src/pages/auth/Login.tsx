@@ -47,15 +47,15 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <div className="min-w-0 overflow-hidden rounded-[28px] border border-indigo-100 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] shadow-lg shadow-indigo-100/40">
-        <div className="h-1 bg-gradient-to-r from-indigo-600 via-cyan-500 to-emerald-500" aria-hidden="true" />
+      <div className="premium-surface-strong min-w-0 overflow-hidden rounded-[32px]">
+        <div className="h-1 bg-[linear-gradient(90deg,#0f172a_0%,#4f46e5_44%,#06b6d4_78%,#10b981_100%)]" aria-hidden="true" />
         <div className="p-6 sm:p-8">
           <div className="min-w-0 space-y-2">
-            <div className="inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
+            <div className="premium-pill w-fit">
               <LogIn className="h-3.5 w-3.5" />
               Sign in
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-900">Welcome back</h1>
+            <h1 className="text-2xl font-black tracking-tight text-slate-950">Welcome back</h1>
             <p className="text-sm leading-relaxed text-slate-600">
               Continue your WCAG training, keep your progress synced, and jump back into the assistant when you need a quick accessibility answer.
             </p>
@@ -81,7 +81,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="premium-input mt-1.5"
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
@@ -94,7 +94,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="premium-input mt-1.5"
                 required
                 autoComplete="current-password"
                 placeholder="Your password"
@@ -113,7 +113,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition hover:from-indigo-700 hover:via-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="premium-button premium-button-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Signing in..." : "Sign in"}
               <ArrowRight className="h-4 w-4" />

@@ -51,18 +51,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto rounded-xl border p-3 shadow-lg ${colorClasses(toast.kind)}`}
+            className={`pointer-events-auto rounded-2xl border p-3 shadow-[0_18px_45px_rgba(15,23,42,0.12)] backdrop-blur-md ${colorClasses(toast.kind)}`}
             role="status"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-extrabold">{toast.title}</p>
+                <p className="truncate text-sm font-extrabold text-slate-950">{toast.title}</p>
                 {toast.message && <p className="mt-0.5 text-xs font-medium text-slate-600">{toast.message}</p>}
               </div>
               <button
                 type="button"
                 onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-                className="rounded-lg p-1 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="rounded-lg p-1 text-slate-600 hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 aria-label="Dismiss notification"
               >
                 <X className="h-4 w-4" />
@@ -80,4 +80,3 @@ export function useToast() {
   if (!ctx) throw new Error("useToast must be used within ToastProvider");
   return ctx;
 }
-

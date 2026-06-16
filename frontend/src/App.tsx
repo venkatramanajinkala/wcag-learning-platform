@@ -10,6 +10,7 @@ import CriterionPage from "./pages/criterion/CriterionPage";
 import { AuthProvider } from "./components/auth/AuthProvider";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { ToastProvider } from "./components/toast/ToastProvider";
+import { ThemeProvider } from "./components/theme/ThemeProvider";
 import PublicLayout from "./pages/public/PublicLayout";
 import Landing from "./pages/public/Landing";
 import Features from "./pages/public/Features";
@@ -23,65 +24,67 @@ export default function App() {
   return (
     <BrowserRouter>
       <ToastProvider>
-        <AuthProvider>
-          <Routes>
-            {/* Public marketing pages */}
-            <Route
-              path="/"
-              element={
-                <PublicLayout>
-                  <Landing />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/features"
-              element={
-                <PublicLayout>
-                  <Features />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <PublicLayout>
-                  <About />
-                </PublicLayout>
-              }
-            />
+        <ThemeProvider>
+          <AuthProvider>
+            <Routes>
+              {/* Public marketing pages */}
+              <Route
+                path="/"
+                element={
+                  <PublicLayout>
+                    <Landing />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/features"
+                element={
+                  <PublicLayout>
+                    <Features />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <PublicLayout>
+                    <About />
+                  </PublicLayout>
+                }
+              />
 
-            {/* Auth pages */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+              {/* Auth pages */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Protected app */}
-            <Route
-              path="/app"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Home />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/app/criterion/:id"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <CriterionPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
+              {/* Protected app */}
+              <Route
+                path="/app"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Home />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/app/criterion/:id"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <CriterionPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AuthProvider>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AuthProvider>
+        </ThemeProvider>
       </ToastProvider>
     </BrowserRouter>
   );

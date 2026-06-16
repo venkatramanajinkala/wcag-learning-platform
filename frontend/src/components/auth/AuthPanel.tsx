@@ -47,7 +47,7 @@ export default function AuthPanel() {
     return (
       <Link
         to="/login"
-        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+        className="topbar-button"
       >
         <LogIn className="h-3.5 w-3.5" />
         Sign in
@@ -67,14 +67,14 @@ export default function AuthPanel() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex h-8 items-center gap-1 rounded-lg border py-1 pl-1 pr-1.5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-          open ? "border-slate-300 bg-slate-50 text-slate-900" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+        className={`topbar-button py-0.5 pl-1.5 pr-1.5 ${
+          open ? "topbar-button-primary" : ""
         }`}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`${user.full_name} profile menu`}
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-[10px] font-black text-white">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_100%)] text-[10px] font-black text-white">
           {initials || "A"}
         </span>
         <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -84,7 +84,7 @@ export default function AuthPanel() {
         <div
           role="menu"
           aria-label="Profile actions"
-          className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+          className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-2xl border border-white/70 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl"
         >
           <div className="border-b border-slate-100 px-3 py-2.5">
             <p className="truncate text-xs font-extrabold text-slate-900">{user.full_name}</p>
@@ -132,4 +132,3 @@ export default function AuthPanel() {
     </div>
   );
 }
-

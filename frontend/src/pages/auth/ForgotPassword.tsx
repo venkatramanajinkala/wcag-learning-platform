@@ -32,10 +32,10 @@ export default function ForgotPassword() {
 
   return (
     <AuthLayout>
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+      <div className="premium-surface-strong space-y-4 rounded-[32px] p-6">
         <div className="space-y-1">
-          <h1 className="text-lg font-extrabold tracking-tight">Reset password</h1>
-          <p className="text-xs font-medium text-slate-600">We’ll email you a link to reset your password.</p>
+          <h1 className="text-lg font-extrabold tracking-tight text-slate-950">Reset password</h1>
+          <p className="text-xs font-medium text-slate-600">We&apos;ll email you a link to reset your password.</p>
         </div>
         <form onSubmit={onSubmit} className="space-y-3">
           <label className="block text-xs font-bold text-slate-700">
@@ -44,7 +44,7 @@ export default function ForgotPassword() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="premium-input mt-1 text-xs"
               required
               autoComplete="email"
             />
@@ -53,7 +53,7 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-slate-900 px-3 py-2.5 text-xs font-extrabold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-60"
+            className="premium-button premium-button-primary w-full text-xs disabled:opacity-60"
           >
             {loading ? "Sending..." : "Send reset link"}
           </button>
@@ -68,4 +68,3 @@ export default function ForgotPassword() {
     </AuthLayout>
   );
 }
-

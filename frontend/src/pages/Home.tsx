@@ -167,26 +167,27 @@ export default function Home() {
     <div className="min-w-0 space-y-12">
       
       {/* Welcome Banner */}
-      <section className="relative min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-xs sm:p-8 lg:p-10" aria-labelledby="welcome-title">
+      <section className="premium-surface-strong relative min-w-0 overflow-hidden rounded-[32px] p-5 text-slate-900 sm:p-8 lg:p-10" aria-labelledby="welcome-title">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.12),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.1),transparent_24%)]" />
         {/* Subtle grid lines background overlay */}
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[linear-gradient(to_right,#4f46e5_1px,transparent_1px),linear-gradient(to_bottom,#4f46e5_1px,transparent_1px)] bg-[size:24px_24px]" />
         
         <div className="relative z-10 max-w-3xl min-w-0 space-y-4">
-          <div className="inline-flex max-w-full flex-wrap items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-mono font-bold">
+          <div className="premium-pill w-fit max-w-full flex-wrap">
             <Sparkles className="w-3.5 h-3.5" />
             Empowering Accessible Code
           </div>
-          <h1 id="welcome-title" className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-slate-900">
+          <h1 id="welcome-title" className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-950">
             Learn Accessibility, <br />
             By breaking it first.
           </h1>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-semibold">
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium max-w-3xl">
             Welcome to A11yPlay, the WCAG compliance study deck. Instead of dry theoretical manuals, we present you with real interactive codeplay blockades. Toggle between 'Bad' and 'Good' examples, modify the DOM in real-time, inspect automated scan feedback, and build muscle memory for semantic accessible engineering.
           </p>
           <div className="pt-2 flex flex-wrap gap-3">
             <a 
               href="#coursework-bento" 
-              className="inline-flex max-w-full items-center justify-center gap-2 bg-indigo-600 text-white font-extrabold text-xs px-5 py-3 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer shadow-xs"
+              className="premium-button premium-button-primary"
             >
               Start Learning Path
               <ArrowRight className="w-4 h-4 font-extrabold" />
@@ -197,9 +198,9 @@ export default function Home() {
 
       {/* Main Course bento grid */}
       <section id="coursework-bento" className="space-y-6" aria-labelledby="coursework-title">
-        <div className="flex min-w-0 flex-col justify-between gap-4 border-b border-slate-200 pb-3.5 sm:flex-row sm:flex-wrap sm:items-baseline">
+        <div className="flex min-w-0 flex-col justify-between gap-4 border-b border-white/70 pb-3.5 sm:flex-row sm:flex-wrap sm:items-baseline">
           <div className="min-w-0">
-            <h2 id="coursework-title" className="flex items-start gap-2 text-xl font-extrabold text-slate-900 tracking-tight">
+            <h2 id="coursework-title" className="flex items-start gap-2 text-xl font-black text-slate-950 tracking-tight">
               <Layers className="w-5 h-5 text-indigo-600" />
               WCAG Success Criterion Curriculum
             </h2>
@@ -238,7 +239,7 @@ export default function Home() {
             return (
               <div 
                 key={criterion.id} 
-                className="group relative flex min-w-0 flex-col justify-between space-y-4 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-indigo-300 hover:shadow-xs"
+                className="group premium-card relative flex min-w-0 flex-col justify-between space-y-4 rounded-[28px] p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(15,23,42,0.12)]"
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -312,14 +313,14 @@ export default function Home() {
       </section>
 
       {/* Interactive custom validation block (W3Schools TryIt / Sandbox checker style!) */}
-      <section className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xs space-y-5 sm:p-6" aria-labelledby="custom-inspector-heading">
-        <div className="flex min-w-0 flex-col justify-between gap-3 border-b border-slate-200 pb-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <section className="premium-surface-strong min-w-0 overflow-hidden rounded-[32px] p-4 space-y-5 sm:p-6" aria-labelledby="custom-inspector-heading">
+        <div className="flex min-w-0 flex-col justify-between gap-3 border-b border-white/70 pb-3 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-1.5 text-[10px] bg-indigo-50 border border-indigo-100 text-indigo-700 font-extrabold tracking-wider font-mono uppercase px-2.5 py-1 rounded-md">
+            <span className="premium-chip bg-indigo-50 text-indigo-700">
               <Terminal className="w-3.5 h-3.5" />
               Interactive Scanner Tool
             </span>
-            <h2 id="custom-inspector-heading" className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight mt-2.5">
+            <h2 id="custom-inspector-heading" className="text-base sm:text-lg font-black text-slate-950 tracking-tight mt-2.5">
               Custom Accessibility Code Auditor (Verify Your Own Code)
             </h2>
             <p className="text-xs text-slate-500">Paste raw HTML below to scan for alt, label form elements, and tabindex traps.</p>
@@ -329,21 +330,21 @@ export default function Home() {
         <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-2">
           {/* Custom Editor Area */}
           <div className="flex min-w-0 flex-col space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-900 px-3 py-2 rounded-t-lg text-[10px] font-mono text-slate-400">
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-950 px-3 py-2 rounded-t-2xl text-[10px] font-mono text-slate-300">
               <span className="font-bold">Write or paste custom HTML:</span>
               <span className="text-slate-500 text-[9px]">Check live a11y parameters</span>
             </div>
             <textarea
               value={customCode}
               onChange={(e) => setCustomCode(e.target.value)}
-              className="w-full min-w-0 flex-1 whitespace-pre-wrap break-words min-h-[220px] p-3 font-mono text-xs bg-slate-950 text-slate-200 rounded-b-lg border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 leading-relaxed"
+              className="w-full min-w-0 flex-1 whitespace-pre-wrap break-words min-h-[220px] p-3 font-mono text-xs bg-slate-950 text-slate-200 rounded-b-2xl border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 leading-relaxed"
               placeholder="Paste HTML here..."
               spellCheck="false"
               aria-label="Editor area for custom accessibility checker code"
             />
             <button
               onClick={handleScanCustomCode}
-              className="w-full inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-2.5 rounded-lg shadow-xs transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="premium-button premium-button-primary w-full text-xs"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               Scan Code & Evaluate Report
@@ -352,7 +353,7 @@ export default function Home() {
 
           {/* Diagnostic outputs and preview */}
           <div className="flex min-w-0 flex-col justify-between space-y-4">
-            <div className="flex min-h-[200px] min-w-0 flex-1 flex-col justify-between rounded-xl border border-slate-200 bg-slate-50 p-4.5">
+            <div className="premium-panel flex min-h-[200px] min-w-0 flex-1 flex-col justify-between rounded-[24px] p-4.5">
               <div>
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 mb-2.5">
                   <ShieldCheck className="w-4 h-4 text-indigo-600" />
@@ -397,9 +398,9 @@ export default function Home() {
       </section>
 
       {/* Mini interactive checklist card */}
-      <section className="grid min-w-0 grid-cols-1 gap-6 rounded-2xl border border-indigo-900 bg-indigo-950 p-5 text-white shadow-xs sm:p-8 md:grid-cols-3" aria-labelledby="checklist-heading">
+      <section className="grid min-w-0 grid-cols-1 gap-6 rounded-[32px] border border-slate-900/10 bg-[linear-gradient(135deg,#020617_0%,#1e293b_48%,#334155_100%)] p-5 text-white shadow-[0_24px_70px_rgba(15,23,42,0.16)] sm:p-8 md:grid-cols-3" aria-labelledby="checklist-heading">
         <div className="md:col-span-1 space-y-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-indigo-900 border border-indigo-800 text-indigo-100 text-[10px] font-bold font-mono uppercase">
+          <span className="inline-flex items-center gap-1 rounded-full border border-indigo-800 bg-indigo-900 px-2.5 py-1 text-[10px] font-bold font-mono uppercase text-indigo-100">
             <CheckSquare className="w-3.5 h-3.5" />
             Checklist Task
           </span>
@@ -411,7 +412,7 @@ export default function Home() {
           </p>
         </div>
         
-        <div className="min-w-0 rounded-xl border border-indigo-800/80 bg-indigo-900/40 p-5 space-y-3 md:col-span-2">
+        <div className="min-w-0 rounded-[24px] border border-white/10 bg-white/10 p-5 space-y-3 md:col-span-2 backdrop-blur-md">
           <ul className="space-y-3">
             {checklist.map((item) => (
               <li key={item.id} className="flex items-start gap-3">

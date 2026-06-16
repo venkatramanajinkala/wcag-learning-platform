@@ -133,7 +133,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl shadow-indigo-900/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200"
+        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_60%,#06b6d4_100%)] text-white shadow-[0_18px_45px_rgba(15,23,42,0.24)] transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200"
         aria-label="Open A11yPlay WCAG Assistant"
       >
         <MessageSquare className="h-6 w-6" aria-hidden="true" />
@@ -144,15 +144,15 @@ export default function ChatWidget() {
   return (
     <section
       aria-label="A11yPlay WCAG Assistant"
-      className={`fixed z-50 flex flex-col overflow-hidden border border-slate-200 bg-white shadow-2xl shadow-slate-900/15 transition-all ${
+      className={`fixed z-50 flex flex-col overflow-hidden border border-white/70 bg-white/85 shadow-[0_30px_90px_rgba(15,23,42,0.18)] backdrop-blur-xl transition-all ${
         isExpanded
           ? "inset-4 rounded-xl sm:inset-8"
           : "bottom-5 right-5 h-[560px] max-h-[calc(100vh-2rem)] w-[390px] max-w-[calc(100vw-2rem)] rounded-xl"
       }`}
     >
-      <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-md">
+      <header className="flex h-14 items-center justify-between border-b border-slate-200/70 bg-white/90 px-4 backdrop-blur-md">
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_100%)] text-white shadow-lg shadow-slate-950/15">
             <Bot className="h-4 w-4" aria-hidden="true" />
           </div>
           <div className="min-w-0">
@@ -181,14 +181,14 @@ export default function ChatWidget() {
         </div>
       </header>
 
-      <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50 px-4 py-4" aria-live="polite">
+        <div className="flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,#f8fbff_0%,#f8fafc_100%)] px-4 py-4" aria-live="polite">
         {messages.map((message) => (
           <article key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-[88%] rounded-xl px-3.5 py-3 text-sm leading-6 shadow-xxs ${
+              className={`max-w-[88%] rounded-xl px-3.5 py-3 text-sm leading-6 shadow-sm ${
                 message.role === "user"
-                  ? "bg-slate-900 text-white"
-                  : "border border-slate-200 bg-white text-slate-800"
+                ? "bg-slate-950 text-white shadow-lg shadow-slate-950/15"
+                  : "border border-slate-200 bg-white/95 text-slate-800 shadow-sm"
               }`}
             >
               <p className="whitespace-pre-wrap">{message.content}</p>
@@ -237,7 +237,7 @@ export default function ChatWidget() {
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-semibold text-slate-600 shadow-xxs">
+            <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-semibold text-slate-600 shadow-sm">
               <Loader2 className="h-4 w-4 animate-spin text-indigo-600" aria-hidden="true" />
               Thinking through WCAG context
             </div>
@@ -246,7 +246,7 @@ export default function ChatWidget() {
         <div ref={endRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="border-t border-slate-200 bg-white p-3">
+      <form onSubmit={handleSubmit} className="border-t border-slate-200/70 bg-white/90 p-3 backdrop-blur-md">
         <label htmlFor="wcag-assistant-message" className="sr-only">
           Ask the WCAG assistant
         </label>
@@ -264,12 +264,12 @@ export default function ChatWidget() {
             }}
             rows={2}
             placeholder="Ask about alt text, contrast, keyboard access..."
-            className="min-h-11 flex-1 resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+            className="premium-input min-h-11 flex-1 resize-none text-sm"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_100%)] text-white transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:bg-slate-300"
             aria-label="Send message"
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

@@ -32,14 +32,14 @@ export default function ResetPassword() {
 
   return (
     <AuthLayout>
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+      <div className="premium-surface-strong space-y-4 rounded-[32px] p-6">
         <div className="space-y-1">
-          <h1 className="text-lg font-extrabold tracking-tight">Choose a new password</h1>
+          <h1 className="text-lg font-extrabold tracking-tight text-slate-950">Choose a new password</h1>
           <p className="text-xs font-medium text-slate-600">This link expires automatically.</p>
         </div>
 
         {!token ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold text-amber-900">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold text-amber-900">
             Missing reset token. Please use the link from your email.
           </div>
         ) : (
@@ -50,7 +50,7 @@ export default function ResetPassword() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="premium-input mt-1 text-xs"
                 required
                 minLength={8}
                 autoComplete="new-password"
@@ -60,7 +60,7 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-slate-900 px-3 py-2.5 text-xs font-extrabold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-60"
+              className="premium-button premium-button-primary w-full text-xs disabled:opacity-60"
             >
               {loading ? "Updating..." : "Update password"}
             </button>
@@ -76,4 +76,3 @@ export default function ResetPassword() {
     </AuthLayout>
   );
 }
-

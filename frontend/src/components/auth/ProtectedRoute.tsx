@@ -9,8 +9,8 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
   if (!ready) {
     return (
       <div className="min-h-[60vh] grid place-items-center">
-        <div className="text-center space-y-2">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900" />
+        <div className="premium-card space-y-3 rounded-[28px] px-6 py-5 text-center">
+          <div className="mx-auto h-9 w-9 animate-spin rounded-full border-2 border-slate-300 border-t-slate-950" />
           <p className="text-xs font-bold text-slate-600">Loading session...</p>
         </div>
       </div>
@@ -23,4 +23,3 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
 
   return <>{children}</>;
 }
-

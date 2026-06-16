@@ -23,6 +23,7 @@ import {
 import { wcagCriteria } from "../../data/wcag/criteria";
 import AuthPanel from "../auth/AuthPanel";
 import ChatWidget from "../chat/ChatWidget";
+import ThemeToggle from "../theme/ThemeToggle";
 import { readLocalProgress } from "../../lib/progress";
 import { getStoredToken, isBackendConfigured, resetRemoteProgress } from "../../lib/api";
 
@@ -160,7 +161,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const principles = ["Perceivable", "Operable", "Understandable", "Robust"];
 
   return (
-    <div className={`min-h-screen min-w-0 bg-slate-50 text-slate-800 flex flex-col overflow-x-clip font-sans ${textSpacingEnabled ? "a11y-text-spacing" : ""}`}>
+    <div className={`app-shell min-h-screen min-w-0 flex flex-col overflow-x-clip text-slate-800 font-sans ${textSpacingEnabled ? "a11y-text-spacing" : ""}`}>
       {textSpacingEnabled && (
         <style dangerouslySetInnerHTML={{ __html: `
           .a11y-text-spacing *, 
@@ -197,19 +198,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <a 
         href="#main-content" 
         onClick={handleSkipToMain}
-        className="absolute top-4 left-4 z-100 bg-slate-900 text-white font-bold text-sm px-4 py-2.5 rounded-lg shadow-xl tracking-wide opacity-0 focus:opacity-100 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-900 transition-opacity"
+        className="absolute left-4 top-4 z-[100] rounded-full bg-slate-950 px-4 py-2.5 text-sm font-bold tracking-wide text-white opacity-0 shadow-xl shadow-slate-950/20 transition-opacity focus:opacity-100 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-900"
       >
         Skip to main content
       </a>
 
       {/* Top Banner Landmarks */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 shadow-xxs backdrop-blur-md">
-        <div className="mx-auto flex min-h-14 max-w-[1400px] flex-wrap items-center justify-between gap-3 px-3 py-2 sm:px-6">
+      <header className="sticky top-0 z-30 border-b border-white/70 bg-white/70 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+        <div className="mx-auto flex min-h-16 max-w-[1400px] flex-wrap items-center justify-between gap-3 px-3 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 rounded-lg hover:bg-slate-100 focus:outline focus:outline-2 focus:outline-slate-800 focus:ring-slate-850 cursor-pointer"
+              className="lg:hidden rounded-xl p-2.5 text-slate-600 transition hover:bg-white/80 focus:outline focus:outline-2 focus:outline-slate-800 focus:ring-slate-850 cursor-pointer"
               aria-label={mobileMenuOpen ? "Close side menu" : "Open side menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -219,18 +220,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {/* Core branding */}
             <Link 
               to="/app" 
-              className="flex min-w-0 items-center gap-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+              className="flex min-w-0 items-center gap-2.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
               aria-label="A11yPlay Home Screen"
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white shadow-xs transition-transform hover:scale-105">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#0f172a_0%,#4338ca_100%)] text-sm font-bold text-white shadow-lg shadow-slate-950/15 transition-transform hover:scale-105">
                 A
               </div>
               <div className="min-w-0">
-                <span className="block truncate text-sm font-extrabold tracking-tight text-slate-900 sm:text-base">
+                <span className="block truncate text-sm font-black tracking-tight text-slate-950 sm:text-base">
                   A11yPlay
                 </span>
                 <span className="mt-0.5 hidden truncate text-[10px] font-bold leading-none text-slate-500 sm:block">
-                  WCAG Learning Platform
+                  Premium WCAG Learning Platform
                 </span>
               </div>
             </Link>
@@ -241,11 +242,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               {/* Focus highlight trigger */}
               <button
                 onClick={() => setFocusHighlightEnabled(!focusHighlightEnabled)}
-                className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-                  focusHighlightEnabled
-                    ? "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
+                className={`topbar-button ${focusHighlightEnabled ? "topbar-button-primary" : ""}`}
                 aria-pressed={focusHighlightEnabled}
                 title="Toggle High Contrast Keyboard Focus Outlines (WCAG 2.4.7)"
                 aria-label="Toggle High Outline Visible Focus Mode"
@@ -257,11 +254,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               {/* Space trigger */}
               <button
                 onClick={() => setTextSpacingEnabled(!textSpacingEnabled)}
-                className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-                  textSpacingEnabled
-                    ? "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
+                className={`topbar-button ${textSpacingEnabled ? "topbar-button-primary" : ""}`}
                 aria-pressed={textSpacingEnabled}
                 title="Toggle WCAG 1.4.12 Text Spacing Override (verify responsive flows without text truncation)"
                 aria-label="Toggle Text Spacing Adaptability"
@@ -270,7 +263,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <span>Spacing Check</span>
               </button>
 
-              <span className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold text-slate-500">
+              <span className="topbar-button bg-transparent border-transparent px-2.5 text-slate-500 shadow-none hover:bg-transparent hover:text-slate-500">
                 <Keyboard className="w-3.5 h-3.5" />
                 Keyboard Testable
               </span>
@@ -278,13 +271,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             {/* Primary navigation */}
             <nav aria-label="Primary navigation" className="flex min-w-0 flex-wrap items-center justify-end gap-1.5">
+              <ThemeToggle />
               {(() => {
                 const isActive = location.pathname === "/app" || location.pathname.startsWith("/app/");
                 return (
                   <Link
                     to="/app"
-                    className={`inline-flex h-8 items-center rounded-lg px-2.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-                      isActive ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    className={`topbar-button ${
+                      isActive ? "topbar-button-primary" : ""
                     }`}
                     aria-current={isActive ? "page" : undefined}
                   >
@@ -302,7 +296,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <div className="relative mx-auto flex w-full max-w-7xl min-w-0 flex-1 flex-col lg:flex-row">
         {/* Desktop Sidebar Landmarks */}
         <aside 
-          className={`lg:w-76 lg:border-r border-slate-200 bg-white shrink-0 lg:static fixed inset-y-16 left-0 w-[min(20rem,calc(100vw-1rem))] transform ${
+          className={`lg:w-76 lg:border-r border-white/70 bg-white/75 backdrop-blur-xl shrink-0 lg:static fixed inset-y-16 left-0 w-[min(20rem,calc(100vw-1rem))] transform shadow-[0_20px_60px_rgba(15,23,42,0.08)] ${
             mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           } transition-transform duration-200 z-20 flex max-w-full flex-col overflow-y-auto max-h-[calc(100vh-4rem)] p-4 sm:p-5`}
           aria-label="Criteria Directory"
@@ -322,7 +316,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery("")} 
-                  className="absolute right-2 top-2.5 text-slate-450 text-xs hover:text-slate-700 font-bold"
+                  className="absolute right-2 top-2.5 text-slate-500 text-xs font-bold hover:text-slate-700"
                   aria-label="Clear searchQuery"
                 >
                   <X className="w-3 h-3" />
@@ -345,7 +339,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       onClick={() => setSelectedLevel(lvl)}
                       className={`text-[10px] uppercase font-bold py-1 px-2.5 rounded-md cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
                         selectedLevel === lvl 
-                          ? "bg-indigo-600 text-white shadow-xs" 
+                          ? "bg-indigo-600 text-white shadow-sm" 
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                       }`}
                     >
@@ -368,7 +362,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       onClick={() => setSelectedVersion(v)}
                       className={`text-[10px] font-bold py-1 px-2.5 rounded-md cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
                         selectedVersion === v 
-                          ? "bg-slate-900 text-white shadow-xs" 
+                          ? "bg-slate-900 text-white shadow-sm" 
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                       }`}
                     >
@@ -383,13 +377,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <hr className="border-slate-100 mb-5" />
 
           {/* Overall Audit Progress Widget */}
-          <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50 border border-indigo-100 rounded-xl p-4 mb-6 space-y-3.5 shadow-xxs">
+          <div className="premium-surface-strong rounded-[24px] p-4 mb-6 space-y-3.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="flex min-w-0 items-center gap-1.5 text-[11px] font-extrabold text-indigo-950 uppercase tracking-wide">
                 <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 <span>Overall Audit Progress</span>
               </span>
-              <span className="shrink-0 font-mono text-xs font-black text-indigo-700 bg-white border border-indigo-100/50 px-2 py-0.5 rounded-full shadow-xxs">
+              <span className="shrink-0 rounded-full border border-indigo-100/50 bg-white px-2 py-0.5 font-mono text-xs font-black text-indigo-700 shadow-sm">
                 {progressStats.percentComplete}%
               </span>
             </div>
@@ -403,13 +397,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
 
             <div className="grid grid-cols-2 gap-2 pt-0.5">
-              <div className="bg-white/90 rounded-lg p-2 border border-slate-100 text-center shadow-xxs">
+              <div className="rounded-lg border border-slate-100 bg-white/90 p-2 text-center shadow-sm">
                 <span className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Checkpoints</span>
                 <span className="font-mono text-xs font-black text-slate-800">
                   {progressStats.checkedCheckpoints} <span className="text-slate-400 font-normal">/</span> {progressStats.totalCheckpoints}
                 </span>
               </div>
-              <div className="bg-white/90 rounded-lg p-2 border border-slate-100 text-center shadow-xxs">
+              <div className="rounded-lg border border-slate-100 bg-white/90 p-2 text-center shadow-sm">
                 <span className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Standards</span>
                 <span className="font-mono text-xs font-black text-slate-800">
                   {progressStats.completedCriteriaCount} <span className="text-slate-400 font-normal">/</span> {progressStats.totalCriteriaCount}
@@ -422,7 +416,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 onClick={handleResetAllProgress}
                 className={`w-full text-center inline-flex items-center justify-center gap-1.5 text-[10px] font-black py-1.5 px-2.5 rounded-lg transition-all focus:outline-none focus:ring-1 cursor-pointer ${
                   resetConfirm 
-                    ? "bg-red-650 text-white hover:bg-red-700 focus:ring-red-650"
+                    ? "bg-red-600 text-white hover:bg-red-700 focus:ring-red-600"
                     : "text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 focus:ring-red-500"
                 }`}
                 aria-label="Reset study checksheet data"
@@ -568,18 +562,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </main>
       </div>
 
-      <footer className="border-t border-slate-200 bg-white">
+      <footer className="border-t border-white/70 bg-white/75 backdrop-blur-xl">
         <div className="mx-auto grid max-w-7xl min-w-0 gap-4 px-4 py-6 text-xs text-slate-500 sm:px-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:items-center">
           <div className="space-y-1">
             <p className="font-semibold text-slate-700">A11yPlay Platform</p>
             <p>Accessibility-first learning, progress tracking, and audit practice in one place.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3 md:justify-end">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 font-semibold text-emerald-700">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               WCAG 2.2 Compliant
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 font-semibold text-slate-600">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1 font-semibold text-slate-600">
               Learning workspace
             </span>
           </div>

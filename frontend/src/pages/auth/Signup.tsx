@@ -46,15 +46,15 @@ export default function Signup() {
 
   return (
     <AuthLayout>
-      <div className="min-w-0 overflow-hidden rounded-[28px] border border-emerald-100 bg-[linear-gradient(180deg,#ffffff_0%,#f8fff9_100%)] shadow-lg shadow-emerald-100/40">
-        <div className="h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-indigo-600" aria-hidden="true" />
+      <div className="premium-surface-strong min-w-0 overflow-hidden rounded-[32px]">
+        <div className="h-1 bg-[linear-gradient(90deg,#020617_0%,#10b981_38%,#06b6d4_72%,#4f46e5_100%)]" aria-hidden="true" />
         <div className="p-6 sm:p-8">
           <div className="min-w-0 space-y-2">
-            <div className="inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-slate-600">
+            <div className="premium-pill w-fit">
               <UserPlus className="h-3.5 w-3.5" />
               Create account
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-900">Start your WCAG practice</h1>
+            <h1 className="text-2xl font-black tracking-tight text-slate-950">Start your WCAG practice</h1>
             <p className="text-sm leading-relaxed text-slate-600">
               Create an account to save progress, keep audits tied to your profile, and use the assistant across sessions.
             </p>
@@ -79,7 +79,7 @@ export default function Signup() {
               <input
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="premium-input mt-1.5"
                 required
                 minLength={2}
                 autoComplete="name"
@@ -93,7 +93,7 @@ export default function Signup() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="premium-input mt-1.5"
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
@@ -106,7 +106,7 @@ export default function Signup() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-600 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+                className="premium-input mt-1.5"
                 required
                 minLength={8}
                 autoComplete="new-password"
@@ -123,7 +123,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-cyan-600 to-indigo-600 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition hover:from-emerald-700 hover:via-cyan-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="premium-button premium-button-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Creating..." : "Create account"}
               <ArrowRight className="h-4 w-4" />

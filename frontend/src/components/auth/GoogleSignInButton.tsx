@@ -69,5 +69,11 @@ export default function GoogleSignInButton() {
 
   if (!clientId) return null;
 
-  return <div ref={containerRef} className="w-full min-w-0 [&>div]:max-w-full [&>div]:w-full" aria-label="Sign in with Google" />;
+  return (
+    <div
+      ref={containerRef}
+      className="w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-1 shadow-sm [&>div]:max-w-full [&>div]:w-full"
+      aria-label="Sign in with Google"
+    />
+  );
 }

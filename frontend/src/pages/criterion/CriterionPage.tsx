@@ -114,15 +114,15 @@ export default function CriterionPage() {
 
   if (!criterion) {
     return (
-      <div className="text-center py-12 max-w-xl mx-auto space-y-4">
+      <div className="mx-auto max-w-xl space-y-4 py-12 text-center">
         <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto" />
-        <h1 className="text-2xl font-bold text-slate-900 leading-tight">WCAG Criterion Not Found</h1>
-        <p className="text-sm text-slate-500 leading-relaxed">
+        <h1 className="text-2xl font-black leading-tight text-slate-950">WCAG Criterion Not Found</h1>
+        <p className="text-sm leading-relaxed text-slate-500">
           The requested accessibility standard ID (<span className="font-mono font-bold text-slate-800">{id}</span>) does not exist in the initial MVP list.
         </p>
         <Link 
           to="/app" 
-          className="inline-flex items-center gap-2 text-xs font-bold text-white bg-slate-900 px-4 py-2.5 rounded-lg shadow hover:bg-slate-850 focus:outline-2 focus:outline-slate-900 cursor-pointer"
+          className="premium-button premium-button-primary"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
@@ -140,24 +140,24 @@ export default function CriterionPage() {
     >
       
       {/* Visual Navigation Breadcrumbs */}
-      <nav aria-label="Breadcrumb Navigation" className="flex items-center gap-2 text-xs text-slate-450 font-bold">
+      <nav aria-label="Breadcrumb Navigation" className="flex items-center gap-2 text-xs font-bold text-slate-500">
         <Link to="/app" className="hover:text-indigo-600 transition-colors focus:outline-none focus:ring-1 focus:ring-indigo-600 rounded">
           A11yPlay Home
         </Link>
         <span className="text-slate-300">/</span>
-        <span className="text-slate-550">WCAG Criterion {criterion.id}</span>
+        <span className="text-slate-500">WCAG Criterion {criterion.id}</span>
       </nav>
 
       {/* Dynamic Jumbotron Header */}
-      <header className="bg-white border border-slate-200 p-6 sm:p-8 rounded-2xl shadow-xs space-y-5">
+      <header className="premium-surface-strong rounded-[32px] p-6 space-y-5 sm:p-8">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] bg-indigo-50 text-indigo-700 py-1 px-2.5 rounded-md font-mono font-extrabold tracking-wide uppercase">
+          <span className="premium-chip bg-indigo-50 text-indigo-700">
             Principle {criterion.principle}
           </span>
-          <span className="text-[10px] bg-indigo-600 text-white py-1 px-2.5 rounded-md font-mono font-extrabold tracking-wide uppercase shadow-xs">
+          <span className="premium-chip bg-slate-950 text-white shadow-lg shadow-slate-950/15">
             Level {criterion.level}
           </span>
-          <span className="text-[10px] bg-emerald-50 text-emerald-800 py-1 px-2.5 rounded-md font-mono font-extrabold tracking-wide uppercase">
+          <span className="premium-chip bg-emerald-50 text-emerald-800">
             Success Criterion {criterion.id}
           </span>
         </div>
@@ -167,7 +167,7 @@ export default function CriterionPage() {
             ref={headingRef}
             id="criterion-headline"
             tabIndex={-1}
-            className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight focus:outline-none"
+            className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight leading-tight focus:outline-none"
           >
             WCAG {criterion.id}: {criterion.title}
           </h1>
@@ -192,7 +192,7 @@ export default function CriterionPage() {
           </div>
 
           {/* Why It Matters */}
-          <div className="space-y-2 bg-indigo-50/30 border border-indigo-100/40 p-4 rounded-xl">
+          <div className="premium-panel space-y-2 rounded-[24px] p-4">
             <span className="text-[11px] font-bold text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
               <Lightbulb className="w-3.5 h-3.5 text-indigo-700" />
               Why This Matters to Real Users
@@ -207,7 +207,7 @@ export default function CriterionPage() {
       {/* Interactive Playgrounds if available */}
       {criterion.examples && criterion.examples.length > 0 && (
         <section className="space-y-6" aria-label="Interactive Playgrounds">
-          <h2 className="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <h2 className="text-base sm:text-lg font-black text-slate-950 flex items-center gap-2">
             <Shield className="w-5 h-5 text-indigo-600" />
             Interactive Web Sandboxes (Identify & Rectify Failures)
           </h2>
@@ -227,9 +227,9 @@ export default function CriterionPage() {
       {/* Educational Compliance Workbook - Rendered for EVERY item! */}
       <section className="space-y-8" aria-label="Educational Compliance Workbook">
           {/* Header */}
-          <div className="flex items-center gap-2.5 border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-2.5 border-b border-white/70 pb-3">
             <BookmarkCheck className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-base sm:text-lg font-black text-slate-950 tracking-tight">
               Standard Compliance Study Workbook & Audit Deck
             </h2>
           </div>
@@ -237,19 +237,19 @@ export default function CriterionPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left side: Interactive Audit Checklist and Best Practices */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="premium-card rounded-[28px] p-5 space-y-4 sm:p-6">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-[10px] bg-indigo-50 border border-indigo-100 text-indigo-700 font-extrabold tracking-wider font-mono uppercase px-2.5 py-1 rounded-md">
+                  <span className="premium-chip bg-indigo-50 text-indigo-700">
                     <ListTodo className="w-3.5 h-3.5" />
                     Interactive Study Checksheet
                   </span>
-                  <span className="text-[10px] text-slate-450 font-bold font-mono">
+                  <span className="text-[10px] font-bold font-mono text-slate-500">
                     {Object.values(checkedItems).filter(Boolean).length} / {Math.max((criterion.bestPractices?.length || 4), 4)} Complete
                   </span>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                  <h3 className="text-sm font-extrabold text-slate-950 leading-tight">
                     Verify compliance for Success Criterion {criterion.id}
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -319,13 +319,13 @@ export default function CriterionPage() {
               </div>
 
               {/* Standard Testing Method instructions */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-                <span className="inline-flex items-center gap-1.5 text-[10px] bg-emerald-50 border border-emerald-100 text-emerald-700 font-extrabold tracking-wider font-mono uppercase px-2.5 py-1 rounded-md">
+              <div className="premium-card rounded-[28px] p-5 space-y-4 sm:p-6">
+                <span className="premium-chip bg-emerald-50 text-emerald-700">
                   <Terminal className="w-3.5 h-3.5" />
                   Testing Methodology & Evaluation
                 </span>
                 <div className="space-y-3">
-                  <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                  <h3 className="text-sm font-extrabold text-slate-950 leading-tight">
                     Step-by-Step Manual Auditing Instructions
                   </h3>
                   <ol className="list-decimal list-inside space-y-2.5 text-xs text-slate-600 leading-relaxed pl-1">
@@ -354,8 +354,8 @@ export default function CriterionPage() {
 
             {/* Right side: Critical Failure Scenarios */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="bg-slate-900 border border-slate-850 rounded-2xl p-5 sm:p-6 text-white space-y-5 shadow-xs">
-                <div className="flex items-center gap-1 text-[10px] bg-red-950/80 border border-red-900/40 text-red-400 font-bold tracking-wider font-mono uppercase px-2 py-0.5 rounded-md self-start w-fit">
+              <div className="rounded-[28px] border border-slate-900/10 bg-[linear-gradient(135deg,#020617_0%,#111827_48%,#1f2937_100%)] p-5 text-white space-y-5 shadow-[0_24px_70px_rgba(15,23,42,0.16)] sm:p-6">
+                <div className="premium-chip border-red-900/40 bg-red-950/80 text-red-400 self-start w-fit">
                   <XCircle className="w-3.5 h-3.5" />
                   Critical Failure Scenarios
                 </div>
@@ -397,8 +397,8 @@ export default function CriterionPage() {
               </div>
 
               {/* Pro Tips code helper card */}
-              <div className="bg-amber-50/45 border border-amber-100 rounded-2xl p-5 shadow-xs space-y-3">
-                <span className="inline-flex items-center gap-1.5 text-[10px] bg-amber-50 border border-amber-200 text-amber-800 font-extrabold tracking-wider font-mono uppercase px-2.5 py-1 rounded-md">
+              <div className="premium-panel rounded-[28px] border-amber-100 p-5 space-y-3">
+                <span className="premium-chip border-amber-200 bg-amber-50 text-amber-800">
                   <Lightbulb className="w-3.5 h-3.5" />
                   Study Pro-Tip
                 </span>
@@ -411,10 +411,10 @@ export default function CriterionPage() {
         </section>
 
       {/* Extra Educational Resource segment */}
-      <section className="bg-white p-6 rounded-2xl border border-slate-200 mt-10 space-y-3.5 shadow-xs" aria-labelledby="resources-heading">
+      <section className="premium-card mt-10 space-y-3.5 rounded-[28px] p-6" aria-labelledby="resources-heading">
         <div className="flex items-center gap-2">
           <HelpCircle className="w-5 h-5 text-indigo-600" />
-          <h3 id="resources-heading" className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+          <h3 id="resources-heading" className="text-xs font-extrabold uppercase tracking-wider text-slate-950">
             Quick Study Tip: How to Audit Your Own Apps
           </h3>
         </div>
