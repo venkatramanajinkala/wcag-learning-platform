@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
 import Home from "./pages/Home";
 import CriterionPage from "./pages/criterion/CriterionPage";
@@ -21,7 +21,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
           <Routes>
@@ -83,6 +83,6 @@ export default function App() {
           </Routes>
         </AuthProvider>
       </ToastProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

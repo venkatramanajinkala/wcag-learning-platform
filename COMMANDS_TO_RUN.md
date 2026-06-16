@@ -10,13 +10,44 @@ wcag-learning-platform/
   backend/    FastAPI backend API
 ```
 
-## 1. Go to the frontend folder
+## Quick start: run backend and frontend
+
+You need two terminal windows.
+
+## Terminal 1: Start the backend
+
+```powershell
+cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\backend
+```
+
+First-time setup only:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+```
+
+Normal backend start command:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Backend API docs:
+
+```text
+http://localhost:8000/docs
+```
+
+## Terminal 2: Start the frontend
 
 ```powershell
 cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\frontend
 ```
 
-## 2. Install packages
+First-time setup only:
 
 Use `npm.cmd` on this computer because PowerShell is blocking `npm.ps1`.
 
@@ -24,22 +55,44 @@ Use `npm.cmd` on this computer because PowerShell is blocking `npm.ps1`.
 npm.cmd install
 ```
 
-## 3. Check TypeScript
+Make sure `frontend\.env` has:
 
-```powershell
-npm.cmd run lint
+```text
+VITE_API_URL=http://localhost:8000
+VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
-## 4. Start the development server
+Normal frontend start command:
 
 ```powershell
 npm.cmd run dev
 ```
 
-After it starts, open this in your browser:
+Open this in your browser:
 
 ```text
-http://localhost:3000/
+http://localhost:3000/login
+```
+
+## Check commands
+
+Frontend TypeScript check:
+
+```powershell
+npm.cmd run lint
+```
+
+Frontend production build:
+
+```powershell
+npm.cmd run build
+```
+
+Backend Python compile check:
+
+```powershell
+cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\backend
+.\.venv\Scripts\python.exe -m compileall app
 ```
 
 ## Important notes
@@ -49,45 +102,26 @@ http://localhost:3000/
 - The frontend already has `package.json`, so you do not need to run `npm init -y`.
 - The frontend already has `tsconfig.json`, so you do not need to create it again.
 - This project uses Vite, so the start command is `npm.cmd run dev`, not `npm start`.
-- Keep the terminal window open while using the app. If you close it, the local website stops.
-- For Netlify manual deploy, upload `frontend\dist` after running `npm.cmd run build`.
-
-## 5. Run the backend locally
-
-Open a second terminal:
-
-```powershell
-cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-copy .env.example .env
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Backend API docs:
+- Keep both backend and frontend terminal windows open while using the app.
+- If Google login says `Token used too early`, sync Windows time: Settings -> Time & language -> Date & time -> Sync now.
+- For local Google login, Google Cloud OAuth must allow these JavaScript origins:
 
 ```text
-http://localhost:8000/docs
+http://localhost:3000
+http://127.0.0.1:3000
 ```
-
-To connect frontend to backend locally, create `frontend\.env`:
-
-```text
-VITE_API_URL=http://localhost:8000
-```
-
-Then restart the frontend dev server.
 
 ## Deployment settings
 
-Netlify frontend from GitHub:
+Vercel frontend from GitHub:
 
 ```text
 Base directory: frontend
 Build command: npm run build
-Publish directory: dist
-Environment variable: VITE_API_URL=https://your-render-api.onrender.com
+Output directory: dist
+Environment variables:
+  VITE_API_URL=https://your-render-api.onrender.com
+  VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
 Render backend:
@@ -99,7 +133,10 @@ Start command: uvicorn app.main:app --host 0.0.0.0 --port $PORT
 Environment variables:
   SECRET_KEY=your-long-secret
   DATABASE_URL=your-render-postgres-url
-  BACKEND_CORS_ORIGINS=https://your-netlify-site.netlify.app
+  BACKEND_CORS_ORIGINS=https://your-vercel-site.vercel.app
+  BACKEND_CORS_ORIGIN_REGEX=https://.*\.vercel\.app
+  FRONTEND_URL=https://your-vercel-site.vercel.app
+  GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
   ENVIRONMENT=production
 ```
 

@@ -33,7 +33,7 @@ wcag-learning-platform/
 
 ## Run locally
 
-Start the backend:
+Start the backend in terminal 1:
 
 ```powershell
 cd backend
@@ -41,10 +41,10 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 copy .env.example .env
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Start the frontend in a second terminal:
+Start the frontend in terminal 2:
 
 ```powershell
 cd frontend
@@ -62,6 +62,20 @@ Backend API docs:
 
 ```text
 http://localhost:8000/docs
+```
+
+For Google login locally, set the same OAuth client ID in both files:
+
+```text
+backend\.env: GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+frontend\.env: VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```
+
+Google Cloud OAuth authorized JavaScript origins must include:
+
+```text
+http://localhost:3000
+http://127.0.0.1:3000
 ```
 
 ## Resume description

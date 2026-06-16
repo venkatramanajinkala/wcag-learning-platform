@@ -1,4 +1,7 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from google.auth import exceptions as google_auth_exceptions
 from google.auth.transport import requests as grequests
 from google.oauth2 import id_token
 from sqlalchemy import select
@@ -11,6 +14,7 @@ from app.models import User
 from app.schemas import GoogleAuthResponse, GoogleTokenLogin, GoogleUserRead
 
 router = APIRouter(prefix="/oauth", tags=["oauth"])
+logger = logging.getLogger(__name__)
 
 
 def verify_google_id_token(credential: str) -> GoogleUserRead:
@@ -23,14 +27,25 @@ def verify_google_id_token(credential: str) -> GoogleUserRead:
 
     try:
         claims = id_token.verify_oauth2_token(
-            credential, grequests.Request(), settings.google_client_id
+            credential,
+            grequests.Request(),
+            settings.google_client_id,
+            clock_skew_in_seconds=30,
         )
     except ValueError as error:
+        logger.warning("Google token rejected: %s", error)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid Google token",
         )
+    except google_auth_exceptions.TransportError as error:
+        logger.warning("Google token verification transport failed: %s", error)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Could not verify Google token right now",
+        )
     except Exception as error:
+        logger.warning("Google token verification failed: %s", error, exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid Google token",

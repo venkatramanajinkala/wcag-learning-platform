@@ -13,6 +13,7 @@ React + TypeScript frontend for the A11yPlay WCAG learning platform.
 ## Local setup
 
 ```powershell
+cd C:\Users\venkatramana.jinkala\Downloads\wcag-learning-platform\frontend
 npm.cmd install
 npm.cmd run lint
 npm.cmd run dev
@@ -28,4 +29,11 @@ Create `frontend\.env` when connecting to the backend locally:
 
 ```text
 VITE_API_URL=http://localhost:8000
+VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```
+
+Open the login page at:
+
+```text
+http://localhost:3000/login
 ```

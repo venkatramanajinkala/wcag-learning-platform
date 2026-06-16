@@ -10,13 +10,25 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 copy .env.example .env
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 API docs:
 
 ```text
 http://localhost:8000/docs
+```
+
+For Google login, set this in `backend\.env`:
+
+```text
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+```
+
+If Google login says `Token used too early`, sync Windows time:
+
+```text
+Settings -> Time & language -> Date & time -> Sync now
 ```
 
 ## Render deployment
@@ -35,5 +47,6 @@ Environment variables:
 SECRET_KEY=long-random-secret
 DATABASE_URL=Render PostgreSQL internal connection string
 BACKEND_CORS_ORIGINS=https://your-netlify-site.netlify.app
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ENVIRONMENT=production
 ```
