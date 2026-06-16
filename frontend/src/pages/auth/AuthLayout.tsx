@@ -7,7 +7,7 @@ import ThemeToggle from "../../components/theme/ThemeToggle";
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell min-h-screen min-w-0 text-slate-900">
-      <header className="border-b border-white/70 bg-white/65 backdrop-blur-xl">
+      <header className="theme-header">
         <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
           <Link
             to="/"

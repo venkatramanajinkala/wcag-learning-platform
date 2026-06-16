@@ -45,7 +45,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-shell min-h-screen min-w-0 text-slate-900">
-      <header className="sticky top-0 z-30 border-b border-white/70 bg-white/65 backdrop-blur-xl">
+      <header className="theme-header sticky top-0 z-30">
         <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link
             to="/"
@@ -101,7 +101,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           <div
             ref={menuRef}
             id="public-mobile-navigation"
-            className="border-t border-white/70 bg-white/90 px-4 py-3 shadow-xl shadow-slate-950/10 lg:hidden backdrop-blur-xl"
+            className="theme-header-panel px-4 py-3 lg:hidden"
           >
             <nav aria-label="Public mobile navigation" className="mx-auto flex max-w-6xl flex-col gap-2 text-sm font-bold">
               {publicLinks.map((item) => (

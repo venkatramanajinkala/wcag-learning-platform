@@ -151,13 +151,21 @@ export default function CriterionPage() {
       {/* Dynamic Jumbotron Header */}
       <header className="premium-surface-strong rounded-[32px] p-6 space-y-5 sm:p-8">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="premium-chip bg-indigo-50 text-indigo-700">
+          <span className="hero-chip hero-chip-indigo">
             Principle {criterion.principle}
           </span>
-          <span className="premium-chip bg-slate-950 text-white shadow-lg shadow-slate-950/15">
+          <span
+            className={`level-chip ${
+              criterion.level === "A"
+                ? "level-chip-a"
+                : criterion.level === "AA"
+                  ? "level-chip-aa"
+                  : "level-chip-aaa"
+            } shadow-lg shadow-slate-950/15`}
+          >
             Level {criterion.level}
           </span>
-          <span className="premium-chip bg-emerald-50 text-emerald-800">
+          <span className="hero-chip hero-chip-emerald">
             Success Criterion {criterion.id}
           </span>
         </div>
@@ -239,7 +247,7 @@ export default function CriterionPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="premium-card rounded-[28px] p-5 space-y-4 sm:p-6">
                 <div className="flex items-center justify-between">
-                  <span className="premium-chip bg-indigo-50 text-indigo-700">
+                  <span className="hero-chip hero-chip-indigo">
                     <ListTodo className="w-3.5 h-3.5" />
                     Interactive Study Checksheet
                   </span>
@@ -266,8 +274,9 @@ export default function CriterionPage() {
                         <li key={index} className="flex items-start gap-3">
                           <button
                             onClick={() => toggleAuditItem(itemKey)}
-                            className="mt-0.5 relative flex items-center justify-center shrink-0 w-4 h-4 rounded border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 bg-white border-slate-300 hover:border-indigo-400"
+                            className="audit-checkbox mt-0.5 relative flex items-center justify-center shrink-0 w-4 h-4 rounded border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 bg-white border-slate-300 hover:border-indigo-400"
                             aria-label={`Mark as completed: ${practice}`}
+                            aria-pressed={isChecked}
                           >
                             {isChecked && (
                               <div className="absolute inset-0 bg-indigo-600 rounded-xs flex items-center justify-center text-white text-[10px] font-bold">
@@ -297,8 +306,9 @@ export default function CriterionPage() {
                         <li key={index} className="flex items-start gap-3">
                           <button
                             onClick={() => toggleAuditItem(itemKey)}
-                            className="mt-0.5 relative flex items-center justify-center shrink-0 w-4 h-4 rounded border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 bg-white border-slate-300 hover:border-indigo-400"
+                            className="audit-checkbox mt-0.5 relative flex items-center justify-center shrink-0 w-4 h-4 rounded border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 bg-white border-slate-300 hover:border-indigo-400"
                             aria-label={`Mark as completed: ${practice}`}
+                            aria-pressed={isChecked}
                           >
                             {isChecked && (
                               <div className="absolute inset-0 bg-indigo-600 rounded-xs flex items-center justify-center text-white text-[10px] font-bold">
@@ -320,7 +330,7 @@ export default function CriterionPage() {
 
               {/* Standard Testing Method instructions */}
               <div className="premium-card rounded-[28px] p-5 space-y-4 sm:p-6">
-                <span className="premium-chip bg-emerald-50 text-emerald-700">
+                <span className="hero-chip hero-chip-emerald">
                   <Terminal className="w-3.5 h-3.5" />
                   Testing Methodology & Evaluation
                 </span>
@@ -398,11 +408,11 @@ export default function CriterionPage() {
 
               {/* Pro Tips code helper card */}
               <div className="premium-panel rounded-[28px] border-amber-100 p-5 space-y-3">
-                <span className="premium-chip border-amber-200 bg-amber-50 text-amber-800">
+                <span className="hero-chip hero-chip-amber">
                   <Lightbulb className="w-3.5 h-3.5" />
                   Study Pro-Tip
                 </span>
-                <p className="text-xs text-amber-900/90 leading-relaxed font-medium">
+                <p className="criterion-pro-tip text-xs leading-relaxed font-medium">
                   When auditing, always consult real screen reader software such as <strong>NVDA (Windows)</strong>, <strong>VoiceOver (Mac/iOS)</strong>, or <strong>TalkBack (Android)</strong>. True accessible compliance isn't just about scoring clean green on automated lighthouse calculators—it in truth means ensuring equivalent actual functional flow-rates!
                 </p>
               </div>

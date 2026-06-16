@@ -133,7 +133,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_60%,#06b6d4_100%)] text-white shadow-[0_18px_45px_rgba(15,23,42,0.24)] transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200"
+        className="chat-launch-button fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0f172a_0%,#4f46e5_60%,#06b6d4_100%)] text-white shadow-[0_18px_45px_rgba(15,23,42,0.24)] transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-200"
         aria-label="Open A11yPlay WCAG Assistant"
       >
         <MessageSquare className="h-6 w-6" aria-hidden="true" />

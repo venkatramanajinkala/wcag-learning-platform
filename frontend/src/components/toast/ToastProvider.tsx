@@ -19,11 +19,11 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 function colorClasses(kind: ToastKind) {
   switch (kind) {
     case "success":
-      return "border-emerald-200 bg-emerald-50 text-emerald-950";
+      return "toast-success";
     case "error":
-      return "border-red-200 bg-red-50 text-red-950";
+      return "toast-error";
     default:
-      return "border-slate-200 bg-white text-slate-950";
+      return "toast-info";
   }
 }
 
@@ -51,13 +51,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto rounded-2xl border p-3 shadow-[0_18px_45px_rgba(15,23,42,0.12)] backdrop-blur-md ${colorClasses(toast.kind)}`}
+            className={`toast-card pointer-events-auto rounded-2xl border p-3 shadow-[0_18px_45px_rgba(15,23,42,0.12)] backdrop-blur-md ${colorClasses(toast.kind)}`}
             role="status"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-extrabold text-slate-950">{toast.title}</p>
-                {toast.message && <p className="mt-0.5 text-xs font-medium text-slate-600">{toast.message}</p>}
+                <p className="toast-title truncate text-sm font-extrabold">{toast.title}</p>
+                {toast.message && <p className="toast-message mt-0.5 text-xs font-medium">{toast.message}</p>}
               </div>
               <button
                 type="button"

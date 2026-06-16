@@ -8,19 +8,15 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   Menu, 
   X, 
-  CheckCircle, 
-  BookOpen, 
   Layers, 
   Search,
   Filter,
-  Keyboard,
   Info,
   Trophy,
-  Trash2,
-  Eye,
-  Type
+  Trash2
 } from "lucide-react";
 import { wcagCriteria } from "../../data/wcag/criteria";
+import AccessibilityWidget from "./AccessibilityWidget";
 import AuthPanel from "../auth/AuthPanel";
 import ChatWidget from "../chat/ChatWidget";
 import ThemeToggle from "../theme/ThemeToggle";
@@ -204,7 +200,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </a>
 
       {/* Top Banner Landmarks */}
-      <header className="sticky top-0 z-30 border-b border-white/70 bg-white/70 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+      <header className="theme-header sticky top-0 z-30">
         <div className="mx-auto flex min-h-16 max-w-[1400px] flex-wrap items-center justify-between gap-3 px-3 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
@@ -238,39 +234,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-3">
-            <nav aria-label="Accessibility tools" className="hidden shrink-0 flex-wrap items-center justify-end gap-1 xl:flex">
-              {/* Focus highlight trigger */}
-              <button
-                onClick={() => setFocusHighlightEnabled(!focusHighlightEnabled)}
-                className={`topbar-button ${focusHighlightEnabled ? "topbar-button-primary" : ""}`}
-                aria-pressed={focusHighlightEnabled}
-                title="Toggle High Contrast Keyboard Focus Outlines (WCAG 2.4.7)"
-                aria-label="Toggle High Outline Visible Focus Mode"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>Focus Guide</span>
-              </button>
-
-              {/* Space trigger */}
-              <button
-                onClick={() => setTextSpacingEnabled(!textSpacingEnabled)}
-                className={`topbar-button ${textSpacingEnabled ? "topbar-button-primary" : ""}`}
-                aria-pressed={textSpacingEnabled}
-                title="Toggle WCAG 1.4.12 Text Spacing Override (verify responsive flows without text truncation)"
-                aria-label="Toggle Text Spacing Adaptability"
-              >
-                <Type className="w-3.5 h-3.5" />
-                <span>Spacing Check</span>
-              </button>
-
-              <span className="topbar-button bg-transparent border-transparent px-2.5 text-slate-500 shadow-none hover:bg-transparent hover:text-slate-500">
-                <Keyboard className="w-3.5 h-3.5" />
-                Keyboard Testable
-              </span>
-            </nav>
-
-            {/* Primary navigation */}
             <nav aria-label="Primary navigation" className="flex min-w-0 flex-wrap items-center justify-end gap-1.5">
+              <AccessibilityWidget
+                focusGuideEnabled={focusHighlightEnabled}
+                textSpacingEnabled={textSpacingEnabled}
+                onToggleFocusGuide={() => setFocusHighlightEnabled((value) => !value)}
+                onToggleTextSpacing={() => setTextSpacingEnabled((value) => !value)}
+              />
               <ThemeToggle />
               {(() => {
                 const isActive = location.pathname === "/app" || location.pathname.startsWith("/app/");
@@ -568,12 +538,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <p className="font-semibold text-slate-700">A11yPlay Platform</p>
             <p>Accessibility-first learning, progress tracking, and audit practice in one place.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-3 md:justify-end">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 font-semibold text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          <div className="flex flex-wrap items-center gap-3 md:justify-end md:pr-20">
+              <span className="footer-status-pill footer-status-pill-success">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
               WCAG 2.2 Compliant
             </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1 font-semibold text-slate-600">
+              <span className="footer-status-pill footer-status-pill-neutral">
               Learning workspace
             </span>
           </div>

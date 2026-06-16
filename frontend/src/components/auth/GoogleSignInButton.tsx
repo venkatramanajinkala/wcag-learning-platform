@@ -72,7 +72,7 @@ export default function GoogleSignInButton() {
   return (
     <div
       ref={containerRef}
-      className="w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-1 shadow-sm [&>div]:max-w-full [&>div]:w-full"
+      className="mx-auto flex w-full max-w-[420px] min-w-0 justify-center overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-2 shadow-sm [&>div]:max-w-full [&>div]:w-full"
       aria-label="Sign in with Google"
     />
   );

@@ -249,9 +249,9 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
   return (
     <section className="premium-surface-strong overflow-hidden rounded-[32px]" aria-labelledby={`playground-${example.id}`}>
       {/* Playground Header Bar */}
-      <div className="flex flex-col justify-between gap-3 border-b border-white/70 bg-white/90 px-5 py-4 md:flex-row md:items-center">
+      <div className="example-playground-header flex flex-col justify-between gap-3 border-b border-white/70 bg-white/90 px-5 py-4 md:flex-row md:items-center">
         <div>
-          <span className="premium-chip bg-indigo-50 text-indigo-700 mr-2.5">
+          <span className="hero-chip hero-chip-indigo mr-2.5">
             Interactive Play
           </span>
           <h3 id={`playground-${example.id}`} className="mt-1 inline-block text-sm font-black tracking-tight text-slate-950 md:mt-0">
@@ -264,9 +264,9 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
           {criterionId === "1.4.3" && (
             <button
               onClick={() => setGrayscaleEnabled(!grayscaleEnabled)}
-              className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer ${
+              className={`example-toggle-button flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer ${
                 grayscaleEnabled 
-                  ? "border-indigo-150 bg-indigo-50 text-indigo-800 shadow-sm" 
+                  ? "example-toggle-button-active border-indigo-150 bg-indigo-50 text-indigo-800 shadow-sm" 
                   : "border-slate-200 bg-white/90 text-slate-700 hover:bg-white"
               }`}
               aria-pressed={grayscaleEnabled}
@@ -276,7 +276,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               Grayscale Mode: {grayscaleEnabled ? "On" : "Off"}
             </button>
           )}
-          <span className="premium-chip bg-indigo-50 text-indigo-700">
+          <span className="hero-chip hero-chip-indigo">
             SC {criterionId} Engine
           </span>
         </div>
@@ -291,20 +291,20 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 ${grayscaleEnabled ? "filter grayscale" : ""}`}>
           
           {/* 1. BAD accessibility portal */}
-          <div className="premium-card flex flex-col overflow-hidden rounded-[28px]">
-            <div className="flex items-center justify-between border-b border-red-100 bg-red-50/70 px-4 py-3 text-red-950">
+              <div className="premium-card flex flex-col overflow-hidden rounded-[28px]">
+            <div className="example-card-header example-card-header-bad flex items-center justify-between border-b border-red-100 bg-red-50/70 px-4 py-3 text-red-950">
               <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-700">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
                 Example: Failed Implementation
               </span>
 
               {/* Toggle editable codes vs run panel */}
-              <div className="flex gap-1 rounded-full border border-red-200/50 bg-red-100/50 p-0.5">
+              <div className="example-tab-group-bad flex gap-1 rounded-full border border-red-200/50 bg-red-100/50 p-0.5">
                 <button
                   onClick={() => setActiveTabBad("preview")}
-                  className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
+                  className={`example-tab-button cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
                     activeTabBad === "preview" 
-                      ? "bg-red-600 text-white shadow-sm" 
+                      ? "example-tab-button-active-bad bg-red-600 text-white shadow-sm" 
                       : "text-red-700 hover:bg-red-50"
                   }`}
                   aria-pressed={activeTabBad === "preview"}
@@ -313,9 +313,9 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                 </button>
                 <button
                   onClick={() => setActiveTabBad("code")}
-                  className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
+                  className={`example-tab-button cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
                     activeTabBad === "code" 
-                      ? "bg-red-600 text-white shadow-sm" 
+                      ? "example-tab-button-active-bad bg-red-600 text-white shadow-sm" 
                       : "text-red-700 hover:bg-red-50"
                   }`}
                   aria-pressed={activeTabBad === "code"}
@@ -325,10 +325,10 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               </div>
             </div>
 
-            {/* Dynamic visual viewport area */}
+              {/* Dynamic visual viewport area */}
             <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
               <div 
-                className={`${activeTabBad === "preview" ? "block" : "hidden"} flex min-h-[144px] flex-1 items-center justify-center rounded-2xl border border-dashed border-red-200 bg-white/90 p-4`}
+                className={`${activeTabBad === "preview" ? "block" : "hidden"} example-preview-pane example-preview-pane-bad flex min-h-[144px] flex-1 items-center justify-center rounded-2xl border border-dashed border-red-200 bg-white/90 p-4`}
                 aria-label="Inaccessible live rendering sandbox viewport"
                 role="region"
               >
@@ -338,7 +338,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
 
               {/* Code TextArea */}
               <div className={`${activeTabBad === "code" ? "block" : "hidden"} flex-1`}>
-                <div className="flex items-center justify-between rounded-t-2xl border-b border-slate-800 bg-slate-950 px-3 py-1.5 text-[10px] font-mono text-slate-300">
+                <div className="example-code-toolbar flex items-center justify-between rounded-t-2xl border-b border-slate-800 bg-slate-950 px-3 py-1.5 text-[10px] font-mono text-slate-300">
                   <span className="flex items-center gap-1.5 font-bold">
                     <Terminal className="w-3.5 h-3.5 text-red-400" />
                     HTML Code Editor (Failed style)
@@ -354,7 +354,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                       compileCode("bad");
                     }
                   }}
-                  className="w-full min-h-[180px] resize-y rounded-b-2xl bg-slate-950 p-3 font-mono text-xs leading-relaxed text-red-300 focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="example-code-textarea w-full min-h-[180px] resize-y rounded-b-2xl bg-slate-950 p-3 font-mono text-xs leading-relaxed text-red-300 focus:outline-none focus:ring-2 focus:ring-red-600"
                   aria-label="Editable source code area for bad accessibility demonstration"
                   spellCheck="false"
                 />
@@ -363,7 +363,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                 <div className="mt-2.5 flex items-center justify-end gap-2">
                   <button
                     onClick={() => handleReset("bad")}
-                    className="flex cursor-pointer items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="example-reset-button flex cursor-pointer items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
                     title="Reset to default bad code snippet"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -380,7 +380,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               </div>
 
               {/* Dynamic Programmatic Audit Diagnostic Checklist */}
-              <div className="rounded-2xl border border-red-100 bg-red-50/60 p-3.5 text-xs space-y-2">
+              <div className="example-scan-panel example-scan-panel-bad rounded-2xl border border-red-100 bg-red-50/60 p-3.5 text-xs space-y-2">
                 <span className="font-bold flex items-center gap-1.5 text-red-900 tracking-wide text-[11px] mb-2">
                   <ShieldCheck className="w-4 h-4 text-red-600" />
                   PROACTIVE ACCESSIBILITY SCAN
@@ -396,7 +396,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               </div>
 
               {/* Education notes criteria */}
-              <div className="rounded-2xl border border-slate-200/80 bg-slate-50/90 p-3.5 text-xs">
+              <div className="example-notes-panel rounded-2xl border border-slate-200/80 bg-slate-50/90 p-3.5 text-xs">
                 <span className="font-bold block text-slate-800 text-[11px] mb-1">Functional Impact:</span>
                 <ul className="list-disc list-inside space-y-1 text-slate-600 font-medium leading-relaxed">
                   {example.accessibilityNotes.bad.map((note) => (
@@ -409,19 +409,19 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
 
           {/* 2. GOOD accessibility portal */}
           <div className="premium-card flex flex-col overflow-hidden rounded-[28px]">
-            <div className="flex items-center justify-between border-b border-emerald-100 bg-emerald-50/70 px-4 py-3 text-emerald-950">
+            <div className="example-card-header example-card-header-good flex items-center justify-between border-b border-emerald-100 bg-emerald-50/70 px-4 py-3 text-emerald-950">
               <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-700">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                 Example: Correct Implementation
               </span>
 
               {/* Toggle editable codes vs run panel */}
-              <div className="flex gap-1 rounded-full border border-emerald-200/50 bg-emerald-100/50 p-0.5">
+              <div className="example-tab-group-good flex gap-1 rounded-full border border-emerald-200/50 bg-emerald-100/50 p-0.5">
                 <button
                   onClick={() => setActiveTabGood("preview")}
-                  className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
+                  className={`example-tab-button cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
                     activeTabGood === "preview" 
-                      ? "bg-emerald-700 text-white shadow-sm" 
+                      ? "example-tab-button-active-good bg-emerald-700 text-white shadow-sm" 
                       : "text-emerald-800 hover:bg-emerald-50"
                   }`}
                   aria-pressed={activeTabGood === "preview"}
@@ -430,9 +430,9 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                 </button>
                 <button
                   onClick={() => setActiveTabGood("code")}
-                  className={`cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
+                  className={`example-tab-button cursor-pointer rounded-full px-2.5 py-1 text-[10px] font-bold transition-all ${
                     activeTabGood === "code" 
-                      ? "bg-emerald-700 text-white shadow-sm" 
+                      ? "example-tab-button-active-good bg-emerald-700 text-white shadow-sm" 
                       : "text-emerald-800 hover:bg-emerald-50"
                   }`}
                   aria-pressed={activeTabGood === "code"}
@@ -445,7 +445,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
             {/* Dynamic visual viewport area */}
             <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
               <div 
-                className={`${activeTabGood === "preview" ? "block" : "hidden"} flex min-h-[144px] flex-1 items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-white/90 p-4`}
+                className={`${activeTabGood === "preview" ? "block" : "hidden"} example-preview-pane example-preview-pane-good flex min-h-[144px] flex-1 items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-white/90 p-4`}
                 aria-label="Compliant live rendering sandbox viewport"
                 role="region"
               >
@@ -455,7 +455,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
 
               {/* Code TextArea */}
               <div className={`${activeTabGood === "code" ? "block" : "hidden"} flex-1`}>
-                <div className="flex items-center justify-between rounded-t-2xl border-b border-slate-800 bg-slate-950 px-3 py-1.5 text-[10px] font-mono text-slate-300">
+                <div className="example-code-toolbar flex items-center justify-between rounded-t-2xl border-b border-slate-800 bg-slate-950 px-3 py-1.5 text-[10px] font-mono text-slate-300">
                   <span className="flex items-center gap-1.5 font-bold">
                     <Terminal className="w-3.5 h-3.5 text-emerald-400" />
                     HTML Code Editor (Compliant style)
@@ -471,7 +471,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                       compileCode("good");
                     }
                   }}
-                  className="w-full min-h-[180px] resize-y rounded-b-2xl bg-slate-950 p-3 font-mono text-xs leading-relaxed text-emerald-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="example-code-textarea w-full min-h-[180px] resize-y rounded-b-2xl bg-slate-950 p-3 font-mono text-xs leading-relaxed text-emerald-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                   aria-label="Editable source code area for compliant accessibility demonstration"
                   spellCheck="false"
                 />
@@ -480,7 +480,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
                 <div className="mt-2.5 flex items-center justify-end gap-2">
                   <button
                     onClick={() => handleReset("good")}
-                    className="flex cursor-pointer items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="example-reset-button flex cursor-pointer items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
                     title="Reset to default compliant code snippet"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -497,7 +497,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               </div>
 
               {/* Dynamic Programmatic Audit Diagnostic Checklist */}
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3.5 text-xs space-y-2">
+              <div className="example-scan-panel example-scan-panel-good rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3.5 text-xs space-y-2">
                 <span className="font-bold flex items-center gap-1.5 text-emerald-900 tracking-wide text-[11px] mb-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
                   PROACTIVE ACCESSIBILITY SCAN
@@ -513,7 +513,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
               </div>
 
               {/* Education notes criteria */}
-              <div className="rounded-2xl border border-slate-200/80 bg-slate-50/90 p-3.5 text-xs">
+              <div className="example-notes-panel rounded-2xl border border-slate-200/80 bg-slate-50/90 p-3.5 text-xs">
                 <span className="font-bold block text-slate-800 text-[11px] mb-1">Functional Impact:</span>
                 <ul className="list-disc list-inside space-y-1 text-slate-600 font-medium leading-relaxed">
                   {example.accessibilityNotes.good.map((note) => (
@@ -527,7 +527,7 @@ export default function ExamplePlayground({ example, criterionId }: ExamplePlayg
         </div>
 
         {/* Keyboard instructions panel - Floating indigo tip bar */}
-        <aside className="mt-6 flex items-center gap-4 rounded-[24px] border border-slate-900/10 bg-[linear-gradient(135deg,#020617_0%,#312e81_55%,#0f172a_100%)] p-5 text-indigo-100">
+        <aside className="example-session-panel mt-6 flex items-center gap-4 rounded-[24px] border border-slate-900/10 bg-[linear-gradient(135deg,#020617_0%,#312e81_55%,#0f172a_100%)] p-5 text-indigo-100">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-indigo-800 bg-indigo-900 text-xl select-none">
             💡
           </div>

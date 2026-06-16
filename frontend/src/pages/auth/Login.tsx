@@ -61,7 +61,7 @@ export default function Login() {
             </p>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-5 flex justify-center">
             <GoogleSignInButton />
           </div>
 

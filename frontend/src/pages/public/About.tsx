@@ -19,13 +19,13 @@ export default function About() {
               A11yPlay is a WCAG learning platform built around interactive examples, saved progress, and a practical AI assistant for quick guidance.
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
-              <span className="premium-chip relative bg-cyan-50 text-cyan-700">
+              <span className="hero-chip hero-chip-cyan relative">
                 WCAG practice
               </span>
-              <span className="premium-chip relative bg-indigo-50 text-indigo-700">
+              <span className="hero-chip hero-chip-indigo relative">
                 Progress tracking
               </span>
-              <span className="premium-chip relative bg-emerald-50 text-emerald-700">
+              <span className="hero-chip hero-chip-emerald relative">
                 AI guidance
               </span>
             </div>

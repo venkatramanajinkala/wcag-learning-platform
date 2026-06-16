@@ -5,7 +5,7 @@ import Reveal from "../../components/ui/Reveal";
 export default function Landing() {
   return (
     <div className="space-y-12">
-      <section className="theme-hero rounded-[36px] p-6 sm:p-8 lg:p-10">
+      <section className="theme-hero landing-hero rounded-[36px] p-6 sm:p-8 lg:p-10">
         <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
           <Reveal className="space-y-6" delay={0.05}>
             <div className="premium-pill w-fit">
@@ -45,34 +45,34 @@ export default function Landing() {
           </Reveal>
 
           <Reveal delay={0.18}>
-            <div className="premium-surface-strong rounded-[34px] p-6 sm:p-7">
+            <div className="premium-surface-strong landing-workspace rounded-[34px] p-6 sm:p-7">
               <div className="space-y-4">
-                <div className="flex items-start gap-3 rounded-[24px] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
+                <div className="landing-callout flex items-start gap-3 rounded-[24px] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
                   <ShieldCheck className="mt-0.5 h-5 w-5 text-indigo-600" />
                   <div>
-                    <p className="text-sm font-extrabold text-slate-950">Protected learning workspace</p>
-                    <p className="mt-0.5 text-xs font-medium text-slate-600">
+                    <p className="landing-title text-sm font-extrabold text-slate-950">Protected learning workspace</p>
+                    <p className="landing-subtitle mt-0.5 text-xs font-medium text-slate-600">
                       Keep your progress, submissions, and tools tied to your account.
                     </p>
                   </div>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(248,250,252,0.96)_100%)] p-4 shadow-sm">
+                  <div className="landing-stat-card rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(248,250,252,0.96)_100%)] p-4 shadow-sm">
                     <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Audit depth</p>
                     <p className="mt-2 text-2xl font-black text-slate-950">66</p>
                     <p className="mt-1 text-xs leading-relaxed text-slate-600">WCAG criteria in the learning dataset.</p>
                   </div>
-                  <div className="rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(248,250,252,0.96)_100%)] p-4 shadow-sm">
+                  <div className="landing-stat-card rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(248,250,252,0.96)_100%)] p-4 shadow-sm">
                     <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Assistive flow</p>
                     <p className="mt-2 text-2xl font-black text-slate-950">3</p>
                     <p className="mt-1 text-xs leading-relaxed text-slate-600">Practice modes: learn, audit, ask.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 rounded-[24px] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
+                <div className="landing-callout flex items-start gap-3 rounded-[24px] border border-slate-200/80 bg-white/90 p-4 shadow-sm">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-600" />
                   <div>
-                    <p className="text-sm font-extrabold text-slate-950">Track real audit checkpoints</p>
-                    <p className="mt-0.5 text-xs font-medium text-slate-600">
+                    <p className="landing-title text-sm font-extrabold text-slate-950">Track real audit checkpoints</p>
+                    <p className="landing-subtitle mt-0.5 text-xs font-medium text-slate-600">
                       Learn the same steps you use on production apps, with a calmer premium presentation.
                     </p>
                   </div>

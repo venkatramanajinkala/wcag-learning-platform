@@ -258,10 +258,12 @@ export default function Home() {
                         {isCompleted ? "✓ Done" : `${checkedCount}/${bestPracticesCount} Checked`}
                       </span>
                     ) : (
-                      <span className={`text-[10px] font-extrabold uppercase font-mono tracking-wider py-0.5 px-2.5 rounded-md ${
+                      <span className={`level-chip ${
                         criterion.level === "A" 
-                          ? "text-blue-700 bg-blue-50" 
-                          : "text-indigo-700 bg-indigo-50"
+                          ? "level-chip-a" 
+                          : criterion.level === "AA"
+                            ? "level-chip-aa"
+                            : "level-chip-aaa"
                       }`}>
                         Level {criterion.level}
                       </span>
@@ -292,14 +294,14 @@ export default function Home() {
                 {/* Action route button links */}
                 <Link
                   to={`/app/criterion/${criterion.id}`}
-                  className={`w-full text-center inline-flex items-center justify-center gap-1.5 text-xs font-bold py-2.5 rounded-lg transition-all focus:outline-none focus:ring-2 cursor-pointer ${
+                  className={`sandbox-launch-button w-full text-center inline-flex items-center justify-center gap-1.5 text-xs font-bold py-2.5 rounded-lg transition-all focus:outline-none focus:ring-2 cursor-pointer ${
                     criterion.examples && criterion.examples.length > 0
                       ? isCompleted
-                        ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white focus:ring-emerald-600"
-                        : "text-indigo-700 bg-indigo-50 hover:bg-indigo-600 hover:text-white focus:ring-indigo-600"
+                        ? "sandbox-launch-button-success"
+                        : "sandbox-launch-button-primary"
                       : isCompleted
-                        ? "text-emerald-700 bg-emerald-50 hover:bg-emerald-800 hover:text-white focus:ring-emerald-800"
-                        : "text-slate-700 bg-slate-100 hover:bg-slate-800 hover:text-white focus:ring-slate-850"
+                        ? "sandbox-launch-button-success"
+                        : "sandbox-launch-button-neutral"
                   }`}
                   aria-label={`Enter educational study guides for Success Criterion ${criterion.id}: ${criterion.title}`}
                 >
@@ -316,7 +318,7 @@ export default function Home() {
       <section className="premium-surface-strong min-w-0 overflow-hidden rounded-[32px] p-4 space-y-5 sm:p-6" aria-labelledby="custom-inspector-heading">
         <div className="flex min-w-0 flex-col justify-between gap-3 border-b border-white/70 pb-3 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="min-w-0">
-            <span className="premium-chip bg-indigo-50 text-indigo-700">
+            <span className="premium-chip scanner-chip">
               <Terminal className="w-3.5 h-3.5" />
               Interactive Scanner Tool
             </span>
